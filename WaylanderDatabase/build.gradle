@@ -1,0 +1,22 @@
+plugins {
+    id 'me.eduardwayland.mooncraft.waylander.java-conventions'
+    id "com.github.johnrengelman.shadow" version "7.0.0"
+}
+
+dependencies {
+    implementation 'com.zaxxer:HikariCP:4.0.3'
+    implementation 'org.slf4j:slf4j-simple:2.0.0-alpha0'
+    implementation 'org.slf4j:slf4j-api:2.0.0-alpha0'
+    implementation project(':WaylanderScheduler')
+}
+
+shadowJar {
+    relocate 'com.zaxxer', 'me.eduardwayland.mooncraft.waylander.libs.com.zaxxer'
+}
+
+build {
+    jar.enabled(false)
+    dependsOn shadowJar
+}
+
+description = 'WaylanderDatabase'

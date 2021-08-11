@@ -1,0 +1,9 @@
+plugins {
+    id 'me.eduardwayland.mooncraft.waylander.java-conventions'
+}
+
+dependencies {
+    compileOnly 'com.google.guava:guava:30.1.1-jre'
+}
+
+description = 'WaylanderScheduler'
