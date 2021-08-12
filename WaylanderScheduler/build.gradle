@@ -1,9 +1,43 @@
-plugins {
-    id 'me.eduardwayland.mooncraft.waylander.java-conventions'
-}
+
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "maven-publish"
 
 dependencies {
     compileOnly 'com.google.guava:guava:30.1.1-jre'
 }
 
+version = "1.0.0"
 description = 'WaylanderScheduler'
+
+def classifier = project.ext.isSnapshot ? "SNAPSHOT" : !project.ext.isMain ? "${project.ext.branch}-SNAPSHOT" : ""
+
+publishing {
+    repositories {
+        maven {
+            name = "YotersRepo"
+            afterEvaluate {
+                def baseUrl = 'https://repo.yoters.com/repository/maven'
+                def releasesRepoUrl = "$baseUrl-releases"
+                def snapshotsRepoUrl = "$baseUrl-snapshots"
+                url = project.ext.isSnapshot || !project.ext.isMain ? snapshotsRepoUrl : releasesRepoUrl
+
+                credentials {
+                    username = props.get("myNexusUsername", project.properties.get("myNexusUsername") as String)
+                    password = props.get("myNexusPassword", project.properties.get("myNexusPassword") as String)
+                }
+            }
+        }
+    }
+    publications {
+        create("${project.name}Maven", MavenPublication) { publication ->
+            publication.artifact shadowJar
+            afterEvaluate {
+                publication.version("${project.version}-$classifier")
+            }
+        }
+    }
+}
+
+shadowJar {
+    archiveClassifier.set(classifier)
+}

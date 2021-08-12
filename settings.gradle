@@ -1,3 +1,2 @@
 rootProject.name = 'Waylander'
-include(':WaylanderScheduler')
-include(':WaylanderDatabase')
+include ':WaylanderScheduler', ':WaylanderDatabase'
