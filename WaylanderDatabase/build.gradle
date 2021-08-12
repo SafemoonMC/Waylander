@@ -2,6 +2,7 @@
 
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "maven-publish"
+apply plugin: "java"
 
 dependencies {
     implementation 'com.zaxxer:HikariCP:4.0.3'
@@ -13,18 +14,8 @@ dependencies {
     implementation project(':WaylanderScheduler')
 }
 
-shadowJar {
-    relocate 'com.zaxxer', 'me.eduardwayland.mooncraft.waylander.libs.com.zaxxer'
-}
-
-build {
-    jar.enabled(false)
-    dependsOn shadowJar
-}
-
 version = "1.0.0"
 description = 'WaylanderDatabase'
-
 
 def classifier = project.ext.isSnapshot ? "SNAPSHOT" : !project.ext.isMain ? "${project.ext.branch}-SNAPSHOT" : ""
 
@@ -47,7 +38,7 @@ publishing {
     }
     publications {
         create("${project.name}Maven", MavenPublication) { publication ->
-            publication.artifact shadowJar
+            from components.java
             afterEvaluate {
                 publication.version("${project.version}-$classifier")
             }
@@ -55,6 +46,16 @@ publishing {
     }
 }
 
-shadowJar {
+jar {
     archiveClassifier.set(classifier)
+}
+sourcesJar {
+    archiveClassifier.set("sources-$classifier")
+}
+javadocJar {
+    archiveClassifier.set("javadocs-$classifier")
+}
+shadowJar {
+    archiveClassifier.set("all-$classifier")
+    relocate 'com.zaxxer', 'me.eduardwayland.mooncraft.waylander.libs.com.zaxxer'
 }
