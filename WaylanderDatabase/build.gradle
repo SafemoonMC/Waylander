@@ -1,12 +1,15 @@
-plugins {
-    id 'me.eduardwayland.mooncraft.waylander.java-conventions'
-    id "com.github.johnrengelman.shadow" version "7.0.0"
-}
+
+
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "maven-publish"
 
 dependencies {
     implementation 'com.zaxxer:HikariCP:4.0.3'
     implementation 'org.slf4j:slf4j-simple:2.0.0-alpha0'
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha0'
+
+    implementation 'org.jetbrains:annotations:22.0.0'
+
     implementation project(':WaylanderScheduler')
 }
 
@@ -19,4 +22,39 @@ build {
     dependsOn shadowJar
 }
 
+version = "1.0.0"
 description = 'WaylanderDatabase'
+
+
+def classifier = project.ext.isSnapshot ? "SNAPSHOT" : !project.ext.isMain ? "${project.ext.branch}-SNAPSHOT" : ""
+
+publishing {
+    repositories {
+        maven {
+            name = "YotersRepo"
+            afterEvaluate {
+                def baseUrl = 'https://repo.yoters.com/repository/maven'
+                def releasesRepoUrl = "$baseUrl-releases"
+                def snapshotsRepoUrl = "$baseUrl-snapshots"
+                url = project.ext.isSnapshot || !project.ext.isMain ? snapshotsRepoUrl : releasesRepoUrl
+
+                credentials {
+                    username = props.get("myNexusUsername", project.properties.get("myNexusUsername") as String)
+                    password = props.get("myNexusPassword", project.properties.get("myNexusPassword") as String)
+                }
+            }
+        }
+    }
+    publications {
+        create("${project.name}Maven", MavenPublication) { publication ->
+            publication.artifact shadowJar
+            afterEvaluate {
+                publication.version("${project.version}-$classifier")
+            }
+        }
+    }
+}
+
+shadowJar {
+    archiveClassifier.set(classifier)
+}
