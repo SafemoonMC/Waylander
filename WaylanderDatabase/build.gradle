@@ -1,6 +1,3 @@
-
-
-apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "maven-publish"
 apply plugin: "java"
 
@@ -17,9 +14,14 @@ dependencies {
 version = "1.0.0"
 description = 'WaylanderDatabase'
 
-def classifier = project.ext.isSnapshot ? "SNAPSHOT" : !project.ext.isMain ? "${project.ext.branch}-SNAPSHOT" : ""
+shadowJar {
+    relocate 'com.zaxxer', 'me.eduardwayland.mooncraft.waylander.libs.com.zaxxer'
+}
+
+def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
 
 publishing {
+
     repositories {
         maven {
             name = "YotersRepo"
@@ -36,26 +38,13 @@ publishing {
             }
         }
     }
+
     publications {
         create("${project.name}Maven", MavenPublication) { publication ->
             from components.java
             afterEvaluate {
-                publication.version("${project.version}-$classifier")
+                publication.version("${project.version}$jarClassifier")
             }
         }
     }
-}
-
-jar {
-    archiveClassifier.set(classifier)
-}
-sourcesJar {
-    archiveClassifier.set("sources-$classifier")
-}
-javadocJar {
-    archiveClassifier.set("javadocs-$classifier")
-}
-shadowJar {
-    archiveClassifier.set("all-$classifier")
-    relocate 'com.zaxxer', 'me.eduardwayland.mooncraft.waylander.libs.com.zaxxer'
 }

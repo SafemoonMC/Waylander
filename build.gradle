@@ -16,6 +16,8 @@ gradle.buildFinished {
     project.buildDir.deleteDir()
 }
 
+
+
 allprojects {
 
     ext {
@@ -28,6 +30,9 @@ allprojects {
         project.ext["branch"] = branch
         project.ext.isSnapshot = (branch == null || branch == '' || branch == 'develop')
         project.ext.isMain = (branch == null || branch == 'master' || branch == 'main')
+        project.ext.classifier = project.ext.isSnapshot ? "SNAPSHOT" : !project.ext.isMain ? "${project.ext.branch}-SNAPSHOT" : ""
+
+        println "Branch set to $branch | isMain: ${project.ext.isMain} | isSnapshot: ${project.ext.isSnapshot} | ${project.ext.classifier}"
     }
 
     repositories {
@@ -44,6 +49,7 @@ subprojects {
 
     apply plugin: "java"
     apply plugin: "io.freefair.lombok"
+    apply plugin: "com.github.johnrengelman.shadow"
 
     lombok {
         version = "1.18.20"
@@ -64,4 +70,18 @@ subprojects {
 
     }
 
+    def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
+
+    jar {
+        archiveClassifier.set(project.ext.classifier)
+    }
+    sourcesJar {
+        archiveClassifier.set("sources$jarClassifier")
+    }
+    javadocJar {
+        archiveClassifier.set("javadocs$jarClassifier")
+    }
+    shadowJar {
+        archiveClassifier.set("all$jarClassifier")
+    }
 }
