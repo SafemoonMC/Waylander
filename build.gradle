@@ -68,19 +68,16 @@ subprojects {
     test {
 
     }
-
-    def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
-
     jar {
-        archiveClassifier.set(project.ext.classifier)
+        archiveClassifier.set("")
     }
     sourcesJar {
-        archiveClassifier.set("sources$jarClassifier")
+        archiveClassifier.set("sources")
     }
     javadocJar {
-        archiveClassifier.set("javadocs$jarClassifier")
+        archiveClassifier.set("javadocs")
     }
     shadowJar {
-        archiveClassifier.set("all$jarClassifier")
+        archiveClassifier.set("all")
     }
 }
