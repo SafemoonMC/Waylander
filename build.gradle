@@ -17,7 +17,6 @@ gradle.buildFinished {
 }
 
 
-
 allprojects {
 
     ext {
