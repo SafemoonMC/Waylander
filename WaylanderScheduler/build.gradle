@@ -2,7 +2,6 @@ apply plugin: "maven-publish"
 apply plugin: "java"
 
 dependencies {
-    compileOnly 'com.google.guava:guava:30.1.1-jre'
 }
 
 group = "me.eduardwayland.mooncraft.waylander"
