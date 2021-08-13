@@ -70,7 +70,7 @@ public class MariaDBConnectionFactory extends HikariConnectionFactory {
         String propertiesString = properties.entrySet()
                                             .stream()
                                             .map(e -> e.getKey() + "=" + e.getValue())
-                                            .collect(Collectors.joining(";"));
+                                            .collect(Collectors.joining("&"));
         hikariConfig.addDataSourceProperty("properties", propertiesString);
     }
 }
