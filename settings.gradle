@@ -1,2 +1,2 @@
 rootProject.name = 'Waylander'
-include ':WaylanderScheduler', ':WaylanderDatabase'
+include ':WaylanderScheduler', ':WaylanderDatabase', ':WaylanderCommand'
