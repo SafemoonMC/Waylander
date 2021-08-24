@@ -23,7 +23,6 @@ shadowJar {
 def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
 
 publishing {
-
     repositories {
         maven {
             name = "YotersRepo"
