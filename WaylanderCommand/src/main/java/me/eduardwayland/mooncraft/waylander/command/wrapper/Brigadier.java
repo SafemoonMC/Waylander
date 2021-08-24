@@ -148,7 +148,7 @@ public final class Brigadier {
 
         // Register main's aliases
         Arrays.stream(literalCommand.getAliases()).forEach(alias -> {
-            addChild(LiteralArgumentBuilder.literal(alias).redirect(literalCommandNode).build());
+            addChild(LiteralArgumentBuilder.literal(alias).redirect(literalCommandNode).executes(literalCommandNode.getCommand()).build());
             commandMap.put(alias, new BrigadierCommandPair(literalCommand, literalCommandNode));
         });
 

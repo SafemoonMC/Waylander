@@ -88,7 +88,7 @@ public abstract class Command<S extends CommandSender> {
             ArgumentBuilder<Object, ?> literalArgumentBuilder = append(LiteralArgumentBuilder.literal(literalCommand.getName()), literalCommand)
                     .executes(commandContext -> wrapLiteralExecute(literalCommand, commandContext));
             node.then(literalArgumentBuilder);
-            Arrays.stream(literalCommand.getAliases()).forEach(alias -> node.then(append(LiteralArgumentBuilder.literal(alias), literalCommand)).executes(object -> wrapLiteralExecute(literalCommand, object)));
+            Arrays.stream(literalCommand.getAliases()).forEach(alias -> node.then(append(LiteralArgumentBuilder.literal(alias), literalCommand).executes(object -> wrapLiteralExecute(literalCommand, object))));
         }
         for (RequiredCommand<S, ?> requiredCommand : command.getArguments()) {
             Type<?> type = null;
