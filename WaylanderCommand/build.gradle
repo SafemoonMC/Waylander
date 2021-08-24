@@ -12,7 +12,6 @@ dependencies {
     compileOnly 'org.jetbrains:annotations:22.0.0'
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'com.mojang:brigadier:1.0.18'
-    testImplementation 'junit:junit:4.13'
 }
 
 shadowJar {

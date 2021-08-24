@@ -16,9 +16,7 @@ gradle.buildFinished {
     project.buildDir.deleteDir()
 }
 
-
 allprojects {
-
     ext {
 
         def details = versionDetails()
@@ -40,8 +38,6 @@ allprojects {
             url = uri('https://papermc.io/repo/repository/maven-public/')
         }
     }
-
-
 }
 
 subprojects {
@@ -57,9 +53,8 @@ subprojects {
     java {
         withSourcesJar()
         withJavadocJar()
+        sourceCompatibility = JavaVersion.VERSION_16
     }
-
-    java.sourceCompatibility = JavaVersion.VERSION_16
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
@@ -69,15 +64,19 @@ subprojects {
 
     }
     jar {
+        exclude '/META-INF/**'
         archiveClassifier.set("")
     }
     sourcesJar {
+        exclude '/META-INF/**'
         archiveClassifier.set("sources")
     }
     javadocJar {
+        exclude '/META-INF/**'
         archiveClassifier.set("javadocs")
     }
     shadowJar {
+        exclude '/META-INF/**'
         archiveClassifier.set("all")
     }
 }
