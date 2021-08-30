@@ -9,6 +9,7 @@ secrets.properties
 
 ### Package Files ###
 *.jar
+!/dependencies/*/*.jar
 
 ### Gradle ###
 .gradle
