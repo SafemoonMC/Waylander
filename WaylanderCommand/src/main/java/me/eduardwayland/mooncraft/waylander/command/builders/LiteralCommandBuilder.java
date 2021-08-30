@@ -54,7 +54,7 @@ public class LiteralCommandBuilder<S extends CommandSender, T> extends CommandBu
 
     @Override
     public LiteralCommand<S> build() {
-        LiteralCommand<S> command = new LiteralCommand<>(getName(), getDescription(), getPermission(), aliases == null ? new String[0] : aliases, executor);
+        LiteralCommand<S> command = new LiteralCommand<S>(getName(), getDescription() == null ? "" : getDescription(), getPermission(), aliases == null ? new String[0] : aliases, (LiteralExecutor<S>) executor);
         getChildren().forEach(commandBuilder -> command.getChildren().add(commandBuilder.build()));
         getLiterals().forEach(commandBuilder -> command.getLiterals().add(commandBuilder.build()));
         getArguments().forEach(commandBuilder -> command.getArguments().add(commandBuilder.build()));

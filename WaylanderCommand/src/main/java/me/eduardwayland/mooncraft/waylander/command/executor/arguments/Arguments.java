@@ -61,7 +61,7 @@ public final class Arguments {
         if (argument == null) {
             throw new IllegalArgumentException("No such argument '" + name + "' exists on this command");
         } else {
-            Object result = argument.getResult();
+            Object result = (Object) argument.getResult();
             if (PRIMITIVE_TO_WRAPPER.getOrDefault(clazz, clazz).isAssignableFrom(result.getClass())) {
                 return (V) result;
             } else {

@@ -13,7 +13,7 @@ final class BrigadierCommandPair {
     /*
     Fields
      */
-    private final LiteralCommand command;
+    private final LiteralCommand<?> command;
     private final LiteralCommandNode<Object> commandNode;
 
     /*

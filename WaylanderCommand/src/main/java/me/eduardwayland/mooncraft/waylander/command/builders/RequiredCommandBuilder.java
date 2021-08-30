@@ -63,7 +63,7 @@ public class RequiredCommandBuilder<S extends CommandSender, A, T> extends Comma
 
     @Override
     public RequiredCommand<S, A> build() {
-        RequiredCommand<S, A> command = new RequiredCommand<>(getName(), getDescription(), getPermission(), argumentType, suggestions, executor);
+        RequiredCommand<S, A> command = new RequiredCommand<>(getName(), getDescription() == null ? "" : getDescription(), getPermission(), argumentType, suggestions, executor);
         getChildren().forEach(commandBuilder -> command.getChildren().add(commandBuilder.build()));
         getLiterals().forEach(commandBuilder -> command.getLiterals().add(commandBuilder.build()));
         getArguments().forEach(commandBuilder -> command.getArguments().add(commandBuilder.build()));

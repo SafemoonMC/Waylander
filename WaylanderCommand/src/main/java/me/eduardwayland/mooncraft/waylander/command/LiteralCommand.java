@@ -31,6 +31,6 @@ public final class LiteralCommand<S extends CommandSender> extends Command {
      */
     @Override
     public @NotNull LiteralArgumentBuilder<Object> toLiteralArgumentBuilder(boolean createHelpCommand) {
-        return (LiteralArgumentBuilder<Object>) super.toLiteralArgumentBuilder(createHelpCommand).executes(context -> wrapLiteralExecute(this, context));
+        return super.toLiteralArgumentBuilder(createHelpCommand).executes(context -> wrapLiteralExecute(this, context));
     }
 }

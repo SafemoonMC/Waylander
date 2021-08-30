@@ -28,7 +28,7 @@ import java.util.*;
 
 @Getter
 @AllArgsConstructor
-public abstract class Command<S extends CommandSender> {
+public abstract class Command {
 
     /*
     Fields
@@ -37,9 +37,9 @@ public abstract class Command<S extends CommandSender> {
     private final @NotNull String description;
     private final @Nullable Permission permission;
 
-    private final @NotNull List<Command<S>> children = new ArrayList<>();
-    private final @NotNull List<LiteralCommand<S>> literals = new ArrayList<>();
-    private final @NotNull List<RequiredCommand<S, ?>> arguments = new ArrayList<>();
+    private final @NotNull List<Command> children = new ArrayList<>();
+    private final @NotNull List<LiteralCommand<?>> literals = new ArrayList<>();
+    private final @NotNull List<RequiredCommand<?, ?>> arguments = new ArrayList<>();
     private final @NotNull Map<Integer, List<BaseComponent>> helpComponentList = new HashMap<>();
 
     /*
@@ -60,13 +60,13 @@ public abstract class Command<S extends CommandSender> {
         append(argumentBuilder, this);
         if (createHelpCommand) {
             argumentBuilder
-                    .then(LiteralArgumentBuilder.literal("help")
+                    .then(LiteralArgumentBuilder.<Object>literal("help")
                             .executes(commandContext -> {
                                 CommandSender commandSender = Brigadier.getBukkitSender(commandContext.getSource());
                                 sendHelpMessage(commandSender, 1);
                                 return 1;
                             })
-                            .then(RequiredArgumentBuilder.argument("page", IntegerArgumentType.integer(1, getHelpPageCount()))
+                            .then(RequiredArgumentBuilder.<Object, Integer>argument("page", IntegerArgumentType.integer(1, getHelpPageCount()))
                                     .executes(commandContext -> {
                                         CommandSender commandSender = Brigadier.getBukkitSender(commandContext.getSource());
                                         sendHelpMessage(commandSender, commandContext.getArgument("page", Integer.class));
@@ -83,14 +83,19 @@ public abstract class Command<S extends CommandSender> {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    private ArgumentBuilder<Object, ?> append(@NotNull ArgumentBuilder<Object, ?> node, @NotNull Command<S> command) {
-        for (LiteralCommand<S> literalCommand : command.getLiterals()) {
+    private ArgumentBuilder<Object, ?> append(@NotNull ArgumentBuilder<Object, ?> node, @NotNull Command command) {
+        for (LiteralCommand<?> literalCommand : command.getLiterals()) {
             ArgumentBuilder<Object, ?> literalArgumentBuilder = append(LiteralArgumentBuilder.literal(literalCommand.getName()), literalCommand)
+                    .requires(a -> {
+                        CommandSender commandSender = Brigadier.getBukkitSender(a);
+                        return literalCommand.hasPermission(commandSender);
+                    })
                     .executes(commandContext -> wrapLiteralExecute(literalCommand, commandContext));
             node.then(literalArgumentBuilder);
-            Arrays.stream(literalCommand.getAliases()).forEach(alias -> node.then(append(LiteralArgumentBuilder.literal(alias), literalCommand).executes(object -> wrapLiteralExecute(literalCommand, object))));
+            Arrays.stream(literalCommand.getAliases()).forEach(alias -> node.then(append(LiteralArgumentBuilder.literal(alias), literalCommand)
+                    .executes(Object -> wrapLiteralExecute(literalCommand, Object))));
         }
-        for (RequiredCommand<S, ?> requiredCommand : command.getArguments()) {
+        for (RequiredCommand<?, ?> requiredCommand : command.getArguments()) {
             Type<?> type = null;
             ArgumentType<?> finalArgumentType;
             ArgumentType<?> argumentType = requiredCommand.getArgumentType();
@@ -101,7 +106,7 @@ public abstract class Command<S extends CommandSender> {
 
             Type<?> finalType = type;
             if (requiredCommand.getSuggestions() != null && !requiredCommand.getSuggestions().isEmpty()) {
-                node.then(append(RequiredArgumentBuilder.argument(requiredCommand.getName(), finalArgumentType)
+                node.then(append(RequiredArgumentBuilder.argument(requiredCommand.getName(), (ArgumentType<Object>) finalArgumentType)
                         .suggests(((context, builder) -> {
                             for (Suggestion suggestion : requiredCommand.getSuggestions().getSuggestionList()) {
                                 if (suggestion.getTooltip() == null) builder.suggest(suggestion.getArgument());
@@ -110,10 +115,18 @@ public abstract class Command<S extends CommandSender> {
                             if (finalType != null) return finalType.listSuggestions(context, builder);
                             return builder.buildFuture();
                         }))
+                        .requires(a -> {
+                            CommandSender commandSender = Brigadier.getBukkitSender(a);
+                            return requiredCommand.hasPermission(commandSender);
+                        })
                         .executes(commandContext -> wrapRequiredExecute(requiredCommand, commandContext)), requiredCommand));
             } else
                 node.then(append(RequiredArgumentBuilder
-                        .argument(requiredCommand.getName(), finalArgumentType)
+                        .argument(requiredCommand.getName(), (ArgumentType<Object>) finalArgumentType)
+                        .requires(a -> {
+                            CommandSender commandSender = Brigadier.getBukkitSender(a);
+                            return requiredCommand.hasPermission(commandSender);
+                        })
                         .executes(commandContext -> wrapRequiredExecute(requiredCommand, commandContext))
                         .suggests(((commandContext, suggestionsBuilder) -> finalType == null ? Suggestions.empty() : finalType.listSuggestions(commandContext, suggestionsBuilder))), requiredCommand));
         }
@@ -121,7 +134,7 @@ public abstract class Command<S extends CommandSender> {
     }
 
     @SuppressWarnings("unchecked")
-    protected int wrapLiteralExecute(@NotNull LiteralCommand<S> literalCommand, @NotNull CommandContext<Object> commandContext) {
+    protected <S extends CommandSender> int wrapLiteralExecute(@NotNull LiteralCommand<S> literalCommand, @NotNull CommandContext<Object> commandContext) {
         CommandSender commandSender = Brigadier.getBukkitSender(commandContext.getSource());
         if (literalCommand.getExecutor() == null) return 0;
         if (!literalCommand.hasPermission(commandSender)) {
@@ -138,7 +151,7 @@ public abstract class Command<S extends CommandSender> {
     }
 
     @SuppressWarnings("unchecked")
-    protected int wrapRequiredExecute(@NotNull RequiredCommand<S, ?> requiredCommand, @NotNull CommandContext<Object> commandContext) throws CommandSyntaxException {
+    protected <S extends CommandSender> int wrapRequiredExecute(@NotNull RequiredCommand<S, ?> requiredCommand, @NotNull CommandContext<Object> commandContext) throws CommandSyntaxException {
         CommandSender commandSender = Brigadier.getBukkitSender(commandContext.getSource());
         if (requiredCommand.getExecutor() == null) return 0;
         if (!requiredCommand.hasPermission(commandSender)) {

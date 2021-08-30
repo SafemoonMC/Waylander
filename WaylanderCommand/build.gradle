@@ -4,14 +4,13 @@ apply plugin: "java"
 
 repositories {
     mavenCentral()
-    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { url 'https://libraries.minecraft.net/' }
 }
 
 dependencies {
     compileOnly 'org.jetbrains:annotations:22.0.0'
-    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'com.mojang:brigadier:1.0.18'
+    compileOnly rootProject.files("/dependencies/spigots/Paper-1.16.5.jar")
 }
 
 shadowJar {
@@ -19,7 +18,7 @@ shadowJar {
 }
 
 group = "me.eduardwayland.mooncraft.waylander"
-version = "1.0.2"
+version = "1.0.3"
 description = 'This Waylander module aims to ease up Bukkit command creation and improve it by using Mojang\'s Brigadier'
 
 def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
