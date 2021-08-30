@@ -5,12 +5,13 @@ apply plugin: "java"
 repositories {
     mavenCentral()
     maven { url 'https://libraries.minecraft.net/' }
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
 }
 
 dependencies {
     compileOnly 'org.jetbrains:annotations:22.0.0'
     compileOnly 'com.mojang:brigadier:1.0.18'
-    compileOnly rootProject.files("/dependencies/spigots/Paper-1.16.5.jar")
+    compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
 }
 
 shadowJar {
