@@ -1,12 +1,9 @@
 apply plugin: "maven-publish"
 apply plugin: "java"
 
-dependencies {
-}
-
 group = "me.eduardwayland.mooncraft.waylander"
-version = "1.0.2"
-description = 'WaylanderScheduler'
+version = "1.0.3"
+description = 'This Waylander module aims to provide an extendable sync and async scheduler.'
 
 def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
 

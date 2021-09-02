@@ -3,13 +3,12 @@ package me.eduardwayland.mooncraft.waylander.scheduler;
 import lombok.Builder;
 
 import java.util.Locale;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Builder(
-        setterPrefix = "set"
-)
-public class ThreadFactoryImpl {
+@Builder(setterPrefix = "set")
+class ThreadFactoryImpl {
 
 
     private String nameFormat;
@@ -21,7 +20,9 @@ public class ThreadFactoryImpl {
     private ThreadFactory backingThreadFactory;
 
     public ThreadFactory create() {
-        AtomicLong count = (nameFormat != null) ? new AtomicLong(0) : null;
+        final ThreadFactory backingThreadFactory = (this.backingThreadFactory != null) ? this.backingThreadFactory : Executors.defaultThreadFactory();
+        final AtomicLong count = (nameFormat != null) ? new AtomicLong(0) : null;
+
         return runnable -> {
             Thread thread = backingThreadFactory.newThread(runnable);
             if (nameFormat != null) {
