@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class RequiredCommandBuilder<S extends CommandSender, A, T> extends CommandBuilder<S, RequiredCommandBuilder<?, ?, ?>> {
+public class RequiredCommandBuilder<S extends CommandSender, A, T> extends CommandBuilder<S, RequiredCommandBuilder<S, A, ?>> {
 
     /*
     Fields
@@ -34,7 +34,7 @@ public class RequiredCommandBuilder<S extends CommandSender, A, T> extends Comma
     Static Methods
      */
     @NotNull
-    public static <A> RequiredCommandBuilder<?, A, ?> name(@NotNull String name, @NotNull ArgumentType<A> argumentType) {
+    public static <S extends CommandSender, A> RequiredCommandBuilder<S, A, ?> name(@NotNull String name, @NotNull ArgumentType<A> argumentType) {
         return new RequiredCommandBuilder<>(name, argumentType);
     }
 
@@ -42,13 +42,13 @@ public class RequiredCommandBuilder<S extends CommandSender, A, T> extends Comma
     Methods
      */
     @NotNull
-    public RequiredCommandBuilder<?, A, T> suggests(@NotNull String argument, @NotNull String tooltip) {
+    public RequiredCommandBuilder<S, A, T> suggests(@NotNull String argument, @NotNull String tooltip) {
         if (suggestions == null) suggestions = new Suggestions();
         suggestions.add(new Suggestion(argument, new LiteralMessage(tooltip)));
         return getThis();
     }
 
-    public RequiredCommandBuilder<?, A, T> executes(@NotNull RequiredExecutor<S> executor) {
+    public RequiredCommandBuilder<S, A, T> executes(@NotNull RequiredExecutor<S> executor) {
         this.executor = executor;
         return getThis();
     }
@@ -57,7 +57,7 @@ public class RequiredCommandBuilder<S extends CommandSender, A, T> extends Comma
     Override Methods
      */
     @Override
-    protected RequiredCommandBuilder<?, A, T> getThis() {
+    protected RequiredCommandBuilder<S, A, T> getThis() {
         return this;
     }
 

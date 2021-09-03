@@ -19,7 +19,7 @@ shadowJar {
 }
 
 group = "me.eduardwayland.mooncraft.waylander"
-version = "1.0.3"
+version = "1.0.4"
 description = 'This Waylander module aims to ease up Bukkit command creation and improve it by using Mojang\'s Brigadier'
 
 def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
