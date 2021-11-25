@@ -1,5 +1,4 @@
 apply plugin: "maven-publish"
-apply plugin: "java"
 
 dependencies {
     implementation 'com.zaxxer:HikariCP:4.0.3'
@@ -11,40 +10,22 @@ dependencies {
     annotationProcessor 'org.jetbrains:annotations:22.0.0'
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'me.eduardwayland.mooncraft.waylander'
+            artifactId = 'WaylanderDatabase'
+            version = '1.0.0'
+
+            from components.java
+        }
+    }
+}
+
 group = "me.eduardwayland.mooncraft.waylander"
 version = "1.0.4"
 description = 'WaylanderDatabase'
 
 shadowJar {
     relocate 'com.zaxxer', 'me.eduardwayland.mooncraft.waylander.libs.com.zaxxer'
-}
-
-def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
-
-publishing {
-    repositories {
-        maven {
-            name = "YotersRepo"
-            afterEvaluate {
-                def baseUrl = 'https://repo.yoters.com/repository/maven'
-                def releasesRepoUrl = "$baseUrl-releases"
-                def snapshotsRepoUrl = "$baseUrl-snapshots"
-                url = project.ext.isSnapshot || !project.ext.isMain ? snapshotsRepoUrl : releasesRepoUrl
-
-                credentials {
-                    username = props.get("myNexusUsername", project.properties.get("myNexusUsername") as String)
-                    password = props.get("myNexusPassword", project.properties.get("myNexusPassword") as String)
-                }
-            }
-        }
-    }
-
-    publications {
-        create("${project.name}Maven", MavenPublication) { publication ->
-            from components.java
-            afterEvaluate {
-                publication.version("${project.version}$jarClassifier")
-            }
-        }
-    }
 }

@@ -1,11 +1,21 @@
 apply plugin: "maven-publish"
-apply plugin: "java"
-
 
 repositories {
     mavenCentral()
     maven { url 'https://libraries.minecraft.net/' }
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'me.eduardwayland.mooncraft.waylander'
+            artifactId = 'WaylanderCommand'
+            version = '1.0.0'
+
+            from components.java
+        }
+    }
 }
 
 dependencies {
@@ -21,32 +31,3 @@ shadowJar {
 group = "me.eduardwayland.mooncraft.waylander"
 version = "1.0.4"
 description = 'This Waylander module aims to ease up Bukkit command creation and improve it by using Mojang\'s Brigadier'
-
-def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
-
-publishing {
-    repositories {
-        maven {
-            name = "YotersRepo"
-            afterEvaluate {
-                def baseUrl = 'https://repo.yoters.com/repository/maven'
-                def releasesRepoUrl = "$baseUrl-releases"
-                def snapshotsRepoUrl = "$baseUrl-snapshots"
-                url = project.ext.isSnapshot || !project.ext.isMain ? snapshotsRepoUrl : releasesRepoUrl
-
-                credentials {
-                    username = props.get("myNexusUsername", project.properties.get("myNexusUsername") as String)
-                    password = props.get("myNexusPassword", project.properties.get("myNexusPassword") as String)
-                }
-            }
-        }
-    }
-    publications {
-        create("${project.name}Maven", MavenPublication) { publication ->
-            from components.java
-            afterEvaluate {
-                publication.version("${project.version}$jarClassifier")
-            }
-        }
-    }
-}

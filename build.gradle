@@ -3,35 +3,20 @@ plugins {
     id 'maven-publish'
     id "io.freefair.lombok" version "6.1.0-m3" apply false
     id "com.github.johnrengelman.shadow" version "7.0.0" apply false
-    id "com.sidneysimmons.gradle-plugin-external-properties" version "2.0.0"
-    id "com.palantir.git-version" version "0.12.3"
 }
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'me.eduardwayland.mooncraft.waylander'
+            artifactId = 'Waylander'
+            version = '1.0.0'
 
-
-externalProperties {
-    propertiesFileResolver project.file("secrets.properties")
-}
-
-gradle.buildFinished {
-    project.buildDir.deleteDir()
+            from components.java
+        }
+    }
 }
 
 allprojects {
-    ext {
-
-        def details = versionDetails()
-        def branch = props.get("BRANCH", project.properties.get("BRANCH") as String)
-        if (branch == null || branch == '') {
-            branch = details.branchName
-        }
-        project.ext["branch"] = branch
-        project.ext.isSnapshot = (branch == null || branch == '' || branch == 'develop')
-        project.ext.isMain = (branch == null || branch == 'master' || branch == 'main')
-        project.ext.classifier = project.ext.isSnapshot ? "SNAPSHOT" : !project.ext.isMain ? "${project.ext.branch}-SNAPSHOT" : ""
-
-        println "Branch set to $branch | isMain: ${project.ext.isMain} | isSnapshot: ${project.ext.isSnapshot} | ${project.ext.classifier}"
-    }
-
     repositories {
         mavenCentral()
         maven {
@@ -43,6 +28,7 @@ allprojects {
 subprojects {
 
     apply plugin: "java"
+    apply plugin: "maven-publish"
     apply plugin: "io.freefair.lombok"
     apply plugin: "com.github.johnrengelman.shadow"
 
