@@ -2,18 +2,21 @@ package me.eduardwayland.mooncraft.waylander.database.resultset;
 
 import lombok.AllArgsConstructor;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
 @AllArgsConstructor
 public final class ResultSetIterator {
-    
+
     /*
     Fields
      */
-    private final ResultSet resultSet;
-    
+    private final @NotNull ResultSet resultSet;
+
     /*
     Methods
      */
@@ -26,8 +29,8 @@ public final class ResultSetIterator {
             return false;
         }
     }
-    
-    public ResultSet next() {
+
+    public @Nullable ResultSet next() {
         if (!hasNext()) return null;
         try {
             resultSet.next();
@@ -36,8 +39,8 @@ public final class ResultSetIterator {
             return null;
         }
     }
-    
-    public void forEachRemaining(Consumer<? super ResultSet> action) {
+
+    public void forEachRemaining(@NotNull Consumer<? super ResultSet> action) {
         do {
             action.accept(next());
         } while (hasNext());
