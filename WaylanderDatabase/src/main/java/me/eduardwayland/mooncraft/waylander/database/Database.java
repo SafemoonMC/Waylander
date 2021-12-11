@@ -36,7 +36,7 @@ public final class Database {
     /*
     Constructor
      */
-    private Database(@NotNull String identifier, @NotNull ConnectionFactory connectionFactory, @NotNull Scheduler scheduler, @Nullable DatabaseScheme databaseScheme, @Nullable LongSummaryStatistics summaryStatistics) {
+    private Database(@NotNull String identifier, @NotNull ConnectionFactory connectionFactory, @NotNull Scheduler scheduler, @NotNull DatabaseScheme databaseScheme, @Nullable LongSummaryStatistics summaryStatistics) {
         this.identifier = identifier;
         this.scheduler = scheduler;
         this.connectionFactory = connectionFactory;
