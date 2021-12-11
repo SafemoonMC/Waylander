@@ -1,5 +1,3 @@
-apply plugin: "maven-publish"
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -8,10 +6,29 @@ publishing {
             version = '1.0.0'
 
             from components.java
+
+            pom {
+                name = 'WaylanderScheduler'
+                description = 'This Waylander module aims to provide an extendable sync and async scheduler.'
+                developers {
+                    developer {
+                        id = 'EduardWayland'
+                        name = 'Eduard Alexandru Popescu'
+                        email = 'eduardwayland@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "http://vps-2aa23b62.vps.ovh.us:8081/repository/mooncraft-releases/"
+            allowInsecureProtocol = true
+            credentials.username = props.get("nexus-username", properties.get("nexus-username") as String)
+            credentials.password = props.get("nexus-password", properties.get("nexus-password") as String)
         }
     }
 }
 
 group = "me.eduardwayland.mooncraft.waylander"
-version = "1.0.3"
 description = 'This Waylander module aims to provide an extendable sync and async scheduler.'

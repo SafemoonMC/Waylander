@@ -1,11 +1,9 @@
-apply plugin: "maven-publish"
-
 dependencies {
     implementation 'com.zaxxer:HikariCP:4.0.3'
     implementation 'org.slf4j:slf4j-simple:2.0.0-alpha0'
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha0'
 
-    compileOnly project(':WaylanderScheduler')
+    implementation project(':WaylanderScheduler')
     compileOnly 'org.jetbrains:annotations:22.0.0'
     annotationProcessor 'org.jetbrains:annotations:22.0.0'
 }
@@ -18,14 +16,29 @@ publishing {
             version = '1.0.0'
 
             from components.java
+
+            pom {
+                name = 'WaylanderDatabase'
+                description = 'This library aims to avoid all the possible pitfalls with MySQL database handling even when dealing with simple and complex objects. The goal is reached by using asynchronous strategies.'
+                developers {
+                    developer {
+                        id = 'EduardWayland'
+                        name = 'Eduard Alexandru Popescu'
+                        email = 'eduardwayland@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "http://vps-2aa23b62.vps.ovh.us:8081/repository/mooncraft-releases/"
+            allowInsecureProtocol = true
+            credentials.username = props.get("nexus-username", properties.get("nexus-username") as String)
+            credentials.password = props.get("nexus-password", properties.get("nexus-password") as String)
         }
     }
 }
 
 group = "me.eduardwayland.mooncraft.waylander"
-version = "1.0.4"
 description = 'WaylanderDatabase'
-
-shadowJar {
-    relocate 'com.zaxxer', 'me.eduardwayland.mooncraft.waylander.libs.com.zaxxer'
-}
