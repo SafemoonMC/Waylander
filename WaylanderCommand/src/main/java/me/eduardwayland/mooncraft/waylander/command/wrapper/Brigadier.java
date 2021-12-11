@@ -1,10 +1,12 @@
 package me.eduardwayland.mooncraft.waylander.command.wrapper;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedArgument;
-import lombok.AccessLevel;
-import lombok.Getter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -63,41 +65,10 @@ public final class Brigadier {
     }
 
     /*
-    Fields
-     */
-    @Getter(value = AccessLevel.PACKAGE)
-    private final @NotNull BukkitCommandWrapper bukkitCommandWrapper;
-    @Getter
-    private final @NotNull BrigadierCommandWrapper brigadierCommandWrapper;
-
-    CommandDispatcher<Object> commandDispatcher;
-
-    /*
-    Constructor
-     */
-    public Brigadier(@NotNull Plugin plugin) throws NoSuchFieldException {
-        this.bukkitCommandWrapper = new BukkitCommandWrapper(plugin);
-        this.brigadierCommandWrapper = new BrigadierCommandWrapper(plugin);
-        refreshDispatcher();
-
-        Bukkit.getPluginManager().registerEvents(new BrigadierListener(this), plugin);
-    }
-
-    /*
-    Methods
-     */
-    public void refreshDispatcher() {
-        this.commandDispatcher = getDispatcher();
-        this.bukkitCommandWrapper.commandDispatcher = this.commandDispatcher;
-        this.brigadierCommandWrapper.commandDispatcher = this.commandDispatcher;
-    }
-
-    /*
     Static Methods
      */
     @NotNull
     public static CommandSender getBukkitSender(@NotNull Object commandWrapperListener) {
-//        if (commandWrapperListener instanceof CommandSender) return (CommandSender) commandWrapperListener;
         try {
             return (CommandSender) GET_BUKKIT_SENDER_METHOD.invoke(commandWrapperListener);
         } catch (ReflectiveOperationException e) {
@@ -120,6 +91,34 @@ public final class Brigadier {
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+    }
+    /*
+    Fields
+     */
+    @Getter(value = AccessLevel.PACKAGE)
+    private final @NotNull BukkitCommandWrapper bukkitCommandWrapper;
+    @Getter
+    private final @NotNull BrigadierCommandWrapper brigadierCommandWrapper;
+    CommandDispatcher<Object> commandDispatcher;
+
+    /*
+    Constructor
+     */
+    public Brigadier(@NotNull Plugin plugin) throws NoSuchFieldException {
+        this.bukkitCommandWrapper = new BukkitCommandWrapper(plugin);
+        this.brigadierCommandWrapper = new BrigadierCommandWrapper(plugin);
+        refreshDispatcher();
+
+        Bukkit.getPluginManager().registerEvents(new BrigadierListener(this), plugin);
+    }
+
+    /*
+    Methods
+     */
+    public void refreshDispatcher() {
+        this.commandDispatcher = getDispatcher();
+        this.bukkitCommandWrapper.commandDispatcher = this.commandDispatcher;
+        this.brigadierCommandWrapper.commandDispatcher = this.commandDispatcher;
     }
 
     /*

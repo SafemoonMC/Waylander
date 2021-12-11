@@ -1,12 +1,15 @@
 package me.eduardwayland.mooncraft.waylander.command.wrapper;
 
+import lombok.Getter;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
-import lombok.Getter;
+
 import me.eduardwayland.mooncraft.waylander.command.LiteralCommand;
+
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +49,8 @@ public final class BrigadierCommandWrapper {
     }
 
     public void register(@NotNull LiteralCommand<?> literalCommand, boolean createHelpCommand) {
-        if (commandDispatcher == null) throw new IllegalStateException("Child cannot be added. CommandDispatcher instance is missing.");
+        if (commandDispatcher == null)
+            throw new IllegalStateException("Child cannot be added. CommandDispatcher instance is missing.");
 
         LiteralCommandNode<Object> literalCommandNode = literalCommand.toLiteralArgumentBuilder(createHelpCommand).build();
 
@@ -65,7 +69,8 @@ public final class BrigadierCommandWrapper {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     void addChild(@NotNull LiteralCommandNode<Object> literalCommandNode) {
-        if (commandDispatcher == null) throw new IllegalStateException("Child cannot be added. CommandDispatcher instance is missing.");
+        if (commandDispatcher == null)
+            throw new IllegalStateException("Child cannot be added. CommandDispatcher instance is missing.");
         CommandDispatcher dispatcher = commandDispatcher;
         RootCommandNode rootCommandNode = dispatcher.getRoot();
 

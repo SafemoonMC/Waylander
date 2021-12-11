@@ -1,7 +1,9 @@
 package me.eduardwayland.mooncraft.waylander.command.builders;
 
 import lombok.Getter;
+
 import me.eduardwayland.mooncraft.waylander.command.Command;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
@@ -17,12 +19,11 @@ public abstract class CommandBuilder<S extends CommandSender, T extends CommandB
     Fields
      */
     private final @NotNull String name;
-    private @Nullable String description;
-    private @Nullable Permission permission;
-
     private final @NotNull List<CommandBuilder<?, ?>> children = new ArrayList<>();
     private final @NotNull List<LiteralCommandBuilder<?, ?>> literals = new ArrayList<>();
     private final @NotNull List<RequiredCommandBuilder<?, ?, ?>> arguments = new ArrayList<>();
+    private @Nullable String description;
+    private @Nullable Permission permission;
 
     /*
     Constructor

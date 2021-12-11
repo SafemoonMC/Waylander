@@ -1,8 +1,11 @@
 package me.eduardwayland.mooncraft.waylander.command;
 
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import lombok.Getter;
+
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+
 import me.eduardwayland.mooncraft.waylander.command.executor.LiteralExecutor;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.jetbrains.annotations.NotNull;

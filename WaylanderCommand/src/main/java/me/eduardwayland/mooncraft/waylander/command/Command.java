@@ -1,5 +1,8 @@
 package me.eduardwayland.mooncraft.waylander.command;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -8,23 +11,29 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+
 import me.eduardwayland.mooncraft.waylander.command.arguments.Type;
 import me.eduardwayland.mooncraft.waylander.command.executor.arguments.Arguments;
 import me.eduardwayland.mooncraft.waylander.command.suggest.Suggestion;
 import me.eduardwayland.mooncraft.waylander.command.wrapper.Brigadier;
+
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @AllArgsConstructor
@@ -109,10 +118,13 @@ public abstract class Command {
                 node.then(append(RequiredArgumentBuilder.argument(requiredCommand.getName(), (ArgumentType<Object>) finalArgumentType)
                         .suggests(((context, builder) -> {
                             for (Suggestion suggestion : requiredCommand.getSuggestions().getSuggestionList()) {
-                                if (suggestion.getTooltip() == null) builder.suggest(suggestion.getArgument());
-                                else builder.suggest(suggestion.getArgument(), suggestion.getTooltip());
+                                if (suggestion.getTooltip() == null)
+                                    builder.suggest(suggestion.getArgument());
+                                else
+                                    builder.suggest(suggestion.getArgument(), suggestion.getTooltip());
                             }
-                            if (finalType != null) return finalType.listSuggestions(context, builder);
+                            if (finalType != null)
+                                return finalType.listSuggestions(context, builder);
                             return builder.buildFuture();
                         }))
                         .requires(a -> {

@@ -2,6 +2,7 @@ package me.eduardwayland.mooncraft.waylander.command.wrapper;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.RootCommandNode;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,7 +33,7 @@ public class BrigadierListener implements Listener {
     Handlers
      */
     @EventHandler
-    public void onLoad(@NotNull ServerLoadEvent e) {
+    public void on(@NotNull ServerLoadEvent e) {
         brigadier.refreshDispatcher();
         CommandDispatcher<?> dispatcher = brigadier.commandDispatcher;
         RootCommandNode<?> root = dispatcher.getRoot();
@@ -42,11 +43,13 @@ public class BrigadierListener implements Listener {
                 brigadier.getBrigadierCommandWrapper().delChild(root, brigadierCommandPair.getCommandNode().getName());
                 brigadier.getBrigadierCommandWrapper().addChild(brigadierCommandPair.getCommandNode());
             }
-        } else Bukkit.getServer().getOnlinePlayers().forEach(Player::updateCommands);
+        } else {
+            Bukkit.getServer().getOnlinePlayers().forEach(Player::updateCommands);
+        }
     }
 
     @EventHandler
-    public void onCommandSend(@NotNull PlayerCommandSendEvent e) {
+    public void on(@NotNull PlayerCommandSendEvent e) {
         List<String> minecraftPrefixedCommands = brigadier.getBrigadierCommandWrapper().getCommandPairMap().values().stream().map(BrigadierCommandPair::getMinecraftCommand).collect(Collectors.toList());
         e.getCommands().removeAll(minecraftPrefixedCommands);
 

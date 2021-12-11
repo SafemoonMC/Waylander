@@ -1,7 +1,9 @@
 package me.eduardwayland.mooncraft.waylander.command.wrapper;
 
 import com.mojang.brigadier.CommandDispatcher;
+
 import me.eduardwayland.mooncraft.waylander.command.LiteralCommand;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.plugin.Plugin;
@@ -31,8 +33,9 @@ public final class BukkitCommandWrapper {
     Methods
      */
     public void register(@NotNull LiteralCommand<?> literalCommand) {
-        if (commandDispatcher == null)
+        if (commandDispatcher == null) {
             throw new IllegalStateException("The command cannot be registered. CommandDispatcher instance is missing.");
+        }
         DispatcherCommand dispatcherCommand = new DispatcherCommand(plugin, commandDispatcher, literalCommand.getName(), literalCommand.getDescription(), "", Arrays.asList(literalCommand.getAliases()));
         Bukkit.getCommandMap().register(plugin.getName().toLowerCase(), dispatcherCommand);
     }

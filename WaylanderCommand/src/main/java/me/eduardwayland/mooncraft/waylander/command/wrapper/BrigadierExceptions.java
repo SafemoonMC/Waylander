@@ -2,6 +2,7 @@ package me.eduardwayland.mooncraft.waylander.command.wrapper;
 
 import com.mojang.brigadier.Message;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 

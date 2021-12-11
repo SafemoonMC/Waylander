@@ -2,10 +2,12 @@ package me.eduardwayland.mooncraft.waylander.command.builders;
 
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.arguments.ArgumentType;
+
 import me.eduardwayland.mooncraft.waylander.command.RequiredCommand;
 import me.eduardwayland.mooncraft.waylander.command.executor.RequiredExecutor;
 import me.eduardwayland.mooncraft.waylander.command.suggest.Suggestion;
 import me.eduardwayland.mooncraft.waylander.command.suggest.Suggestions;
+
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,12 +15,21 @@ import org.jetbrains.annotations.Nullable;
 public class RequiredCommandBuilder<S extends CommandSender, A, T> extends CommandBuilder<S, RequiredCommandBuilder<S, A, ?>> {
 
     /*
+    Static Methods
+     */
+    @NotNull
+    public static <S extends CommandSender, A> RequiredCommandBuilder<S, A, ?> name(@NotNull String name, @NotNull ArgumentType<A> argumentType) {
+        return new RequiredCommandBuilder<>(name, argumentType);
+    }
+
+    /*
     Fields
      */
     /*
     Fields
      */
-    private @NotNull final ArgumentType<A> argumentType;
+    private @NotNull
+    final ArgumentType<A> argumentType;
     private @Nullable Suggestions suggestions;
     private @Nullable RequiredExecutor<S> executor;
 
@@ -28,14 +39,6 @@ public class RequiredCommandBuilder<S extends CommandSender, A, T> extends Comma
     protected RequiredCommandBuilder(@NotNull String name, @NotNull ArgumentType<A> argumentType) {
         super(name);
         this.argumentType = argumentType;
-    }
-
-    /*
-    Static Methods
-     */
-    @NotNull
-    public static <S extends CommandSender, A> RequiredCommandBuilder<S, A, ?> name(@NotNull String name, @NotNull ArgumentType<A> argumentType) {
-        return new RequiredCommandBuilder<>(name, argumentType);
     }
 
     /*

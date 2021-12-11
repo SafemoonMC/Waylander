@@ -1,9 +1,12 @@
 package me.eduardwayland.mooncraft.waylander.command;
 
-import com.mojang.brigadier.arguments.ArgumentType;
 import lombok.Getter;
+
+import com.mojang.brigadier.arguments.ArgumentType;
+
 import me.eduardwayland.mooncraft.waylander.command.executor.RequiredExecutor;
 import me.eduardwayland.mooncraft.waylander.command.suggest.Suggestions;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.jetbrains.annotations.NotNull;

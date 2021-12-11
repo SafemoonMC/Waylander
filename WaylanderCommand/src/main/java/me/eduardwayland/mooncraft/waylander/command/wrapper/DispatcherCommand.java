@@ -1,9 +1,11 @@
 package me.eduardwayland.mooncraft.waylander.command.wrapper;
 
+import lombok.Getter;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import lombok.Getter;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginIdentifiableCommand;
@@ -46,9 +48,10 @@ public final class DispatcherCommand extends Command implements PluginIdentifiab
             dispatcher.execute(reader, Brigadier.getVanillaCommandListener(sender));
         } catch (CommandSyntaxException e) {
             BrigadierExceptions.report(sender, e);
+            plugin.getLogger().info("Player command exception: " + e);
             return true;
         } catch (Exception e) {
-            plugin.getLogger().info("Command Exception: " + e);
+            plugin.getLogger().info("Command exception: " + e);
             return true;
         }
         return true;
@@ -57,7 +60,7 @@ public final class DispatcherCommand extends Command implements PluginIdentifiab
     /*
     Methods
      */
-    private String join(@NotNull String name, String @NotNull [] arguments) {
+    private @NotNull String join(@NotNull String name, @NotNull String[] arguments) {
         String command = "/" + name;
         if (arguments.length > 0) command += " " + String.join(" ", arguments);
         return command;

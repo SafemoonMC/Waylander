@@ -1,10 +1,14 @@
 package me.eduardwayland.mooncraft.waylander.command.executor.arguments;
 
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.context.ParsedArgument;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.context.ParsedArgument;
+
 import me.eduardwayland.mooncraft.waylander.command.wrapper.Brigadier;
+
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -34,6 +38,14 @@ public final class Arguments {
     }
 
     /*
+    Static Methods
+     */
+    @Contract("_ -> new")
+    public static @NotNull Arguments of(CommandContext<Object> commandContext) {
+        return new Arguments(Brigadier.getArguments(commandContext));
+    }
+
+    /*
     Fields
      */
     private final @NotNull Map<String, ParsedArgument<Object, ?>> argumentMap = new HashMap<>();
@@ -46,22 +58,15 @@ public final class Arguments {
     }
 
     /*
-    Static Methods
-     */
-    public static Arguments of(CommandContext<Object> commandContext) {
-        return new Arguments(Brigadier.getArguments(commandContext));
-    }
-
-    /*
     Methods
      */
     @SuppressWarnings("unchecked")
-    public <V> V getArgument(String name, Class<V> clazz) {
+    public <V> @NotNull V getArgument(String name, Class<V> clazz) {
         ParsedArgument<Object, ?> argument = argumentMap.get(name);
         if (argument == null) {
             throw new IllegalArgumentException("No such argument '" + name + "' exists on this command");
         } else {
-            Object result = (Object) argument.getResult();
+            Object result = argument.getResult();
             if (PRIMITIVE_TO_WRAPPER.getOrDefault(clazz, clazz).isAssignableFrom(result.getClass())) {
                 return (V) result;
             } else {
