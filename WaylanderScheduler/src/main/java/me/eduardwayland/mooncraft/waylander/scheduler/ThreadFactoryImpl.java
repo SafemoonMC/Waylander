@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicLong;
 @Builder(setterPrefix = "set")
 class ThreadFactoryImpl {
 
-
     private String nameFormat;
     @Builder.Default
     private Boolean daemon = null;
@@ -28,8 +27,9 @@ class ThreadFactoryImpl {
             if (nameFormat != null) {
                 thread.setName(String.format(Locale.ROOT, nameFormat, count.getAndIncrement()));
             }
-            if (daemon != null)
+            if (daemon != null) {
                 thread.setDaemon(daemon);
+            }
             thread.setPriority(priority);
             if (uncaughtExceptionHandler != null) {
                 thread.setUncaughtExceptionHandler(uncaughtExceptionHandler);
