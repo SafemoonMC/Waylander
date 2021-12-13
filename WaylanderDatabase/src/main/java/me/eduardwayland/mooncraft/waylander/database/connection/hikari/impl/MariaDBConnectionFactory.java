@@ -1,8 +1,12 @@
 package me.eduardwayland.mooncraft.waylander.database.connection.hikari.impl;
 
 import com.zaxxer.hikari.HikariConfig;
+
 import me.eduardwayland.mooncraft.waylander.database.Credentials;
 import me.eduardwayland.mooncraft.waylander.database.connection.hikari.HikariConnectionFactory;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -12,27 +16,27 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MariaDBConnectionFactory extends HikariConnectionFactory {
-    
+
     /*
     Fields
      */
-    private final String poolName;
-    
+    private final @NotNull String poolName;
+
     /*
     Constructor
      */
-    public MariaDBConnectionFactory(String poolName, Credentials credentials) {
+    public MariaDBConnectionFactory(@NotNull String poolName, @NotNull Credentials credentials) {
         super(credentials);
         this.poolName = poolName;
     }
-    
+
     /*
     Override Methods
      */
     @Override
-    public void configureDatabase(HikariConfig hikariConfig, String address, String port, String databaseName, String username, String password) {
+    public void configureDatabase(@NotNull HikariConfig hikariConfig, @NotNull String address, @NotNull String port, @Nullable String databaseName, @NotNull String username, @NotNull String password) {
         hikariConfig.setDataSourceClassName("org.mariadb.jdbc.MariaDbDataSource");
-        hikariConfig.setJdbcUrl("jdbc:mariadb://" + address + ":" + port + "/" + databaseName);
+        hikariConfig.setJdbcUrl("jdbc:mariadb://" + address + ":" + port + "/" + (databaseName != null ? databaseName : ""));
         hikariConfig.addDataSourceProperty("serverName", address);
         hikariConfig.addDataSourceProperty("port", port);
         hikariConfig.addDataSourceProperty("databaseName", databaseName);
@@ -40,7 +44,7 @@ public class MariaDBConnectionFactory extends HikariConnectionFactory {
         hikariConfig.setPassword(password);
         hikariConfig.setPoolName(poolName);
     }
-    
+
     @Override
     public void postInit() {
         Enumeration<Driver> drivers = DriverManager.getDrivers();
@@ -54,23 +58,23 @@ public class MariaDBConnectionFactory extends HikariConnectionFactory {
             }
         }
     }
-    
+
     @Override
-    protected void overrideProperties(Map<String, String> propertiesMap) {
+    protected void overrideProperties(@NotNull Map<String, String> propertiesMap) {
         // https://mariadb.com/kb/en/about-mariadb-connector-j/
         propertiesMap.putIfAbsent("useServerPrepStmts", "true");
         propertiesMap.putIfAbsent("rewriteBatchedStatements", "true");
         propertiesMap.putIfAbsent("serverTimezone", "UTC");
-        
+
         super.overrideProperties(propertiesMap);
     }
-    
+
     @Override
-    protected void setProperties(HikariConfig hikariConfig, Map<String, String> properties) {
+    protected void setProperties(@NotNull HikariConfig hikariConfig, @NotNull Map<String, String> properties) {
         String propertiesString = properties.entrySet()
-                                            .stream()
-                                            .map(e -> e.getKey() + "=" + e.getValue())
-                                            .collect(Collectors.joining("&"));
+                .stream()
+                .map(e -> e.getKey() + "=" + e.getValue())
+                .collect(Collectors.joining("&"));
         hikariConfig.addDataSourceProperty("properties", propertiesString);
     }
 }

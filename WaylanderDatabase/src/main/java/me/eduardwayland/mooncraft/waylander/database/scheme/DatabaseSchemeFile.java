@@ -11,12 +11,12 @@ import java.io.IOException;
 @EqualsAndHashCode
 @AllArgsConstructor
 public abstract class DatabaseSchemeFile {
-    
+
     /*
     Fields
      */
     private final File file;
-    
+
     /*
     Abstract Methods
      */

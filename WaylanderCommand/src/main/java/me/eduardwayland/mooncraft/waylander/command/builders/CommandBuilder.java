@@ -1,10 +1,13 @@
 package me.eduardwayland.mooncraft.waylander.command.builders;
 
 import lombok.Getter;
+
 import me.eduardwayland.mooncraft.waylander.command.Command;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +18,12 @@ public abstract class CommandBuilder<S extends CommandSender, T extends CommandB
     /*
     Fields
      */
-    private final String name;
-    private String description;
-    private Permission permission;
-
-    private final List<CommandBuilder<?, ?>> children = new ArrayList<>();
-    private final List<LiteralCommandBuilder<?, ?>> literals = new ArrayList<>();
-    private final List<RequiredCommandBuilder<?, ?, ?>> arguments = new ArrayList<>();
+    private final @NotNull String name;
+    private final @NotNull List<CommandBuilder<?, ?>> children = new ArrayList<>();
+    private final @NotNull List<LiteralCommandBuilder<?, ?>> literals = new ArrayList<>();
+    private final @NotNull List<RequiredCommandBuilder<?, ?, ?>> arguments = new ArrayList<>();
+    private @Nullable String description;
+    private @Nullable Permission permission;
 
     /*
     Constructor
@@ -33,12 +35,26 @@ public abstract class CommandBuilder<S extends CommandSender, T extends CommandB
     /*
     Abstract Methods
      */
+
+    /**
+     * @return the current builder instance
+     */
     protected abstract T getThis();
 
+    /**
+     * @return a Command instance obtained from this command
+     */
     public abstract Command build();
 
     /*
     Methods
+     */
+
+    /**
+     * Sets a new description
+     *
+     * @param description a description, used in help command too
+     * @return the updated builder instance
      */
     @NotNull
     public T description(@NotNull String description) {
@@ -46,12 +62,24 @@ public abstract class CommandBuilder<S extends CommandSender, T extends CommandB
         return getThis();
     }
 
+    /**
+     * Sets a new permission requirement
+     *
+     * @param permission a permission instance
+     * @return the updated builder instance
+     */
     @NotNull
     public T permission(@NotNull Permission permission) {
         this.permission = permission;
         return getThis();
     }
 
+    /**
+     * Appends a new command tree to the current one
+     *
+     * @param commandBuilder a new command builder instance representing the new command tree
+     * @return the updated builder instance
+     */
     @NotNull
     public T then(@NotNull CommandBuilder<?, ?> commandBuilder) {
         children.add(commandBuilder);

@@ -1,38 +1,34 @@
-apply plugin: "maven-publish"
-apply plugin: "java"
-
-dependencies {
-}
-
-group = "me.eduardwayland.mooncraft.waylander"
-version = "1.0.2"
-description = 'WaylanderScheduler'
-
-def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
-
 publishing {
-    repositories {
-        maven {
-            name = "YotersRepo"
-            afterEvaluate {
-                def baseUrl = 'https://repo.yoters.com/repository/maven'
-                def releasesRepoUrl = "$baseUrl-releases"
-                def snapshotsRepoUrl = "$baseUrl-snapshots"
-                url = project.ext.isSnapshot || !project.ext.isMain ? snapshotsRepoUrl : releasesRepoUrl
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'me.eduardwayland.mooncraft.waylander'
+            artifactId = 'WaylanderScheduler'
+            version = '1.0.0'
 
-                credentials {
-                    username = props.get("myNexusUsername", project.properties.get("myNexusUsername") as String)
-                    password = props.get("myNexusPassword", project.properties.get("myNexusPassword") as String)
+            from components.java
+
+            pom {
+                name = 'WaylanderScheduler'
+                description = 'This Waylander module aims to provide an extendable sync and async scheduler.'
+                developers {
+                    developer {
+                        id = 'EduardWayland'
+                        name = 'Eduard Alexandru Popescu'
+                        email = 'eduardwayland@gmail.com'
+                    }
                 }
             }
         }
     }
-    publications {
-        create("${project.name}Maven", MavenPublication) { publication ->
-            from components.java
-            afterEvaluate {
-                publication.version("${project.version}$jarClassifier")
-            }
+    repositories {
+        maven {
+            url = "http://vps-2aa23b62.vps.ovh.us:8081/repository/mooncraft-releases/"
+            allowInsecureProtocol = true
+            credentials.username = props.get("nexus-username", properties.get("nexus-username") as String)
+            credentials.password = props.get("nexus-password", properties.get("nexus-password") as String)
         }
     }
 }
+
+group = "me.eduardwayland.mooncraft.waylander"
+description = 'This Waylander module aims to provide an extendable sync and async scheduler.'

@@ -2,6 +2,7 @@ package me.eduardwayland.mooncraft.waylander.command.suggest;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;

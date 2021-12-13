@@ -1,52 +1,40 @@
-apply plugin: "maven-publish"
-apply plugin: "java"
-
-
-repositories {
-    mavenCentral()
-    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    maven { url 'https://libraries.minecraft.net/' }
-}
-
 dependencies {
     compileOnly 'org.jetbrains:annotations:22.0.0'
-    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
-    compileOnly 'com.mojang:brigadier:1.0.18'
+    implementation 'com.mojang:brigadier:1.0.18'
+    implementation "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
 }
-
-shadowJar {
-    exclude '/META-INF/**'
-}
-
-group = "me.eduardwayland.mooncraft.waylander"
-version = "1.0.2"
-description = 'This Waylander module aims to ease up Bukkit command creation and improve it by using Mojang\'s Brigadier'
-
-def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
 
 publishing {
-    repositories {
-        maven {
-            name = "YotersRepo"
-            afterEvaluate {
-                def baseUrl = 'https://repo.yoters.com/repository/maven'
-                def releasesRepoUrl = "$baseUrl-releases"
-                def snapshotsRepoUrl = "$baseUrl-snapshots"
-                url = project.ext.isSnapshot || !project.ext.isMain ? snapshotsRepoUrl : releasesRepoUrl
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'me.eduardwayland.mooncraft.waylander'
+            artifactId = 'WaylanderCommand'
+            version = '1.0.0'
 
-                credentials {
-                    username = props.get("myNexusUsername", project.properties.get("myNexusUsername") as String)
-                    password = props.get("myNexusPassword", project.properties.get("myNexusPassword") as String)
+            from components.java
+
+            pom {
+                name = 'WaylanderCommand'
+                description = 'This Waylander module aims to ease up Bukkit command creation and improve it by using Mojang\'s Brigadier'
+                developers {
+                    developer {
+                        id = 'EduardWayland'
+                        name = 'Eduard Alexandru Popescu'
+                        email = 'eduardwayland@gmail.com'
+                    }
                 }
             }
         }
     }
-    publications {
-        create("${project.name}Maven", MavenPublication) { publication ->
-            from components.java
-            afterEvaluate {
-                publication.version("${project.version}$jarClassifier")
-            }
+    repositories {
+        maven {
+            url = "http://vps-2aa23b62.vps.ovh.us:8081/repository/mooncraft-releases/"
+            allowInsecureProtocol = true
+            credentials.username = props.get("nexus-username", properties.get("nexus-username") as String)
+            credentials.password = props.get("nexus-password", properties.get("nexus-password") as String)
         }
     }
 }
+
+group = "me.eduardwayland.mooncraft.waylander"
+description = 'This Waylander module aims to ease up Bukkit command creation and improve it by using Mojang\'s Brigadier'

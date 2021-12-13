@@ -1,10 +1,12 @@
 package me.eduardwayland.mooncraft.waylander.command.suggest;
 
-import com.mojang.brigadier.Message;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+
+import com.mojang.brigadier.Message;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

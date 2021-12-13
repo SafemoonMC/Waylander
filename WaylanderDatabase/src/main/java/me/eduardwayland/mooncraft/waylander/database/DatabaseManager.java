@@ -3,56 +3,66 @@ package me.eduardwayland.mooncraft.waylander.database;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+
 import me.eduardwayland.mooncraft.waylander.database.queries.BatchQuery;
 import me.eduardwayland.mooncraft.waylander.database.queries.Query;
 import me.eduardwayland.mooncraft.waylander.database.resultset.ResultSetIterator;
 
-import java.sql.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class DatabaseManager {
-    
+
     /*
     Fields
      */
-    private final Database database;
-    
+    private final @NotNull Database database;
+
     /*
     Methods
      */
-    public <T> CompletableFuture<T> executeQuery(Query query, Function<ResultSetIterator, T> function) {
+    public <T> @NotNull CompletableFuture<T> executeQuery(@NotNull Query query, @NotNull Function<ResultSetIterator, T> function) {
         return CompletableFuture.supplyAsync(() -> {
             T object = null;
             long start = System.currentTimeMillis();
             try (Connection connection = database.getConnectionFactory().getConnection()) {
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query.getQuery(), ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
                     query.updatePreparedStatement(preparedStatement);
-                    
+
                     try (ResultSet resultSet = preparedStatement.executeQuery()) {
                         ResultSetIterator resultSetIterator = new ResultSetIterator(resultSet);
-                        object = resultSetIterator.hasNext() ? function.apply(resultSetIterator) : function.apply(null);
+                        object = function.apply(resultSetIterator);
                     }
                 }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             } finally {
                 long finish = System.currentTimeMillis();
-                database.getSummaryStatistics().accept(finish - start);
+                if (database.getSummaryStatistics() != null) {
+                    database.getSummaryStatistics().accept(finish - start);
+                }
             }
             return object;
         }, database.getScheduler().async());
     }
-    
-    public <T> CompletableFuture<T> updateQuery(Query query, Function<Long, T> function, boolean returnGeneratedKeys) {
+
+    public <T> @NotNull CompletableFuture<T> updateQuery(@NotNull Query query, @Nullable Function<Long, T> function, boolean returnGeneratedKeys) {
         return CompletableFuture.supplyAsync(() -> {
             T object = null;
             try (Connection connection = database.getConnectionFactory().getConnection()) {
                 if (query instanceof BatchQuery) connection.setAutoCommit(false);
                 try (PreparedStatement preparedStatement = returnGeneratedKeys ? connection.prepareStatement(query.getQuery(), Statement.RETURN_GENERATED_KEYS) : connection.prepareStatement(query.getQuery())) {
                     query.updatePreparedStatement(preparedStatement);
-                    
+
                     if (query instanceof BatchQuery) {
                         preparedStatement.executeBatch();
                         connection.commit();
@@ -73,13 +83,13 @@ public final class DatabaseManager {
             return object;
         }, database.getScheduler().async());
     }
-    
-    public <T> CompletableFuture<T> updateQuery(Query query, Function<Long, T> function) {
+
+    public <T> @NotNull CompletableFuture<T> updateQuery(@NotNull Query query, @Nullable Function<Long, T> function) {
         return updateQuery(query, function, false);
     }
-    
-    public CompletableFuture<Void> updateQuery(Query query) {
+
+    public @NotNull CompletableFuture<Void> updateQuery(@NotNull Query query) {
         return updateQuery(query, null);
     }
-    
+
 }

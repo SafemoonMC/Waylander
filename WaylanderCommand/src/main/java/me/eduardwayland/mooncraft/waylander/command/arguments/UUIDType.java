@@ -7,8 +7,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,7 +30,7 @@ public class UUIDType implements WordType<UUID> {
     Override Methods
      */
     @Override
-    public UUID parse(StringReader reader) throws CommandSyntaxException {
+    public UUID parse(@NotNull StringReader reader) throws CommandSyntaxException {
         String string = reader.readUnquotedString();
         try {
             return UUID.fromString(string);
@@ -42,8 +44,9 @@ public class UUIDType implements WordType<UUID> {
         Player sender = source instanceof Player ? (Player) source : null;
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if ((sender == null || sender.canSee(player)) && player.getUniqueId().toString().startsWith(builder.getRemaining()))
+            if ((sender == null || sender.canSee(player)) && player.getUniqueId().toString().toLowerCase().startsWith(builder.getRemaining().toLowerCase())) {
                 builder.suggest(player.getUniqueId().toString());
+            }
         }
 
         return builder.buildFuture();

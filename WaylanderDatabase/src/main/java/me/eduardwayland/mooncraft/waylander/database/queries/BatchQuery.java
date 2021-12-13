@@ -1,6 +1,7 @@
 package me.eduardwayland.mooncraft.waylander.database.queries;
 
 import lombok.RequiredArgsConstructor;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
@@ -8,20 +9,20 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 public final class BatchQuery extends Query {
-    
+
     /*
     Fields
      */
     private final @NotNull LinkedList<Object[]> parametersList;
-    
+
     /*
     Constructor
      */
-    protected BatchQuery(@NotNull String query, @NotNull LinkedList<Object[]> parametersList) {
+    private BatchQuery(@NotNull String query, @NotNull LinkedList<Object[]> parametersList) {
         super(query);
         this.parametersList = parametersList;
     }
-    
+
     /*
     Override Methods
      */
@@ -35,26 +36,26 @@ public final class BatchQuery extends Query {
             preparedStatement.addBatch();
         }
     }
-    
+
     /*
     Methods
      */
-    public LinkedList<Object[]> getParametersList() {
+    public @NotNull LinkedList<Object[]> getParametersList() {
         return new LinkedList<>(parametersList);
     }
-    
+
     /*
     Builder
      */
     @RequiredArgsConstructor
     public static class Builder {
-        
+
         /*
         Fields
          */
         private final String query;
         private final LinkedList<Object[]> parametersList = new LinkedList<>();
-        
+
         /*
         Methods
          */
@@ -62,7 +63,7 @@ public final class BatchQuery extends Query {
             parametersList.add(objects);
             return this;
         }
-        
+
         public BatchQuery build() {
             if (query == null) return null;
             return new BatchQuery(query, parametersList);

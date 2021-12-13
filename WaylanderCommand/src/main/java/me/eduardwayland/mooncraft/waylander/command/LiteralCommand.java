@@ -1,8 +1,11 @@
 package me.eduardwayland.mooncraft.waylander.command;
 
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import lombok.Getter;
+
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+
 import me.eduardwayland.mooncraft.waylander.command.executor.LiteralExecutor;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +34,6 @@ public final class LiteralCommand<S extends CommandSender> extends Command {
      */
     @Override
     public @NotNull LiteralArgumentBuilder<Object> toLiteralArgumentBuilder(boolean createHelpCommand) {
-        return (LiteralArgumentBuilder<Object>) super.toLiteralArgumentBuilder(createHelpCommand).executes(context -> wrapLiteralExecute(this, context));
+        return super.toLiteralArgumentBuilder(createHelpCommand).executes(context -> wrapLiteralExecute(this, context));
     }
 }

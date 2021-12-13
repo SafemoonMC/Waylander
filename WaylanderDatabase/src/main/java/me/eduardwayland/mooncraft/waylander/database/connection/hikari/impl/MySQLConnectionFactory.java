@@ -1,9 +1,14 @@
 package me.eduardwayland.mooncraft.waylander.database.connection.hikari.impl;
 
-import com.zaxxer.hikari.HikariConfig;
 import lombok.Getter;
+
+import com.zaxxer.hikari.HikariConfig;
+
 import me.eduardwayland.mooncraft.waylander.database.Credentials;
 import me.eduardwayland.mooncraft.waylander.database.connection.hikari.HikariConnectionFactory;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -13,32 +18,32 @@ import java.util.Map;
 
 @Getter
 public class MySQLConnectionFactory extends HikariConnectionFactory {
-    
+
     /*
     Fields
      */
-    private final String poolName;
-    
+    private final @NotNull String poolName;
+
     /*
     Constructor
      */
-    public MySQLConnectionFactory(String poolName, Credentials credentials) {
+    public MySQLConnectionFactory(@NotNull String poolName, @NotNull Credentials credentials) {
         super(credentials);
         this.poolName = poolName;
     }
-    
+
     /*
     Override Methods
      */
     @Override
-    public void configureDatabase(HikariConfig hikariConfig, String address, String port, String databaseName, String username, String password) {
+    public void configureDatabase(@NotNull HikariConfig hikariConfig, @NotNull String address, @NotNull String port, @Nullable String databaseName, @NotNull String username, @NotNull String password) {
         hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        hikariConfig.setJdbcUrl("jdbc:mysql://" + address + ":" + port + "/" + databaseName);
+        hikariConfig.setJdbcUrl("jdbc:mysql://" + address + ":" + port + "/" + (databaseName != null ? databaseName : ""));
         hikariConfig.setUsername(username);
         hikariConfig.setPassword(password);
         hikariConfig.setPoolName(poolName);
     }
-    
+
     @Override
     public void postInit() {
         Enumeration<Driver> drivers = DriverManager.getDrivers();
@@ -52,9 +57,9 @@ public class MySQLConnectionFactory extends HikariConnectionFactory {
             }
         }
     }
-    
+
     @Override
-    protected void overrideProperties(Map<String, String> propertiesMap) {
+    protected void overrideProperties(@NotNull Map<String, String> propertiesMap) {
         // https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration
         propertiesMap.putIfAbsent("cachePrepStmts", "true");
         propertiesMap.putIfAbsent("prepStmtCacheSize", "250");
@@ -69,7 +74,7 @@ public class MySQLConnectionFactory extends HikariConnectionFactory {
         propertiesMap.putIfAbsent("alwaysSendSetIsolation", "false");
         propertiesMap.putIfAbsent("cacheCallableStmts", "true");
         propertiesMap.putIfAbsent("serverTimezone", "UTC");
-        
+
         super.overrideProperties(propertiesMap);
     }
 }

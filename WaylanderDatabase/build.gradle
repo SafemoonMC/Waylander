@@ -1,51 +1,44 @@
-apply plugin: "maven-publish"
-apply plugin: "java"
-
 dependencies {
-    implementation 'com.zaxxer:HikariCP:4.0.3'
-    implementation 'org.slf4j:slf4j-simple:2.0.0-alpha0'
-    implementation 'org.slf4j:slf4j-api:2.0.0-alpha0'
-
-    compileOnly 'org.jetbrains:annotations:22.0.0'
-    annotationProcessor 'org.jetbrains:annotations:22.0.0'
+    implementation 'com.zaxxer:HikariCP:5.0.0'
+    implementation 'org.slf4j:slf4j-simple:2.0.0-alpha5'
+    implementation 'org.slf4j:slf4j-api:2.0.0-alpha5'
 
     implementation project(':WaylanderScheduler')
+    compileOnly 'org.jetbrains:annotations:22.0.0'
+    annotationProcessor 'org.jetbrains:annotations:22.0.0'
 }
-
-group = "me.eduardwayland.mooncraft.waylander"
-version = "1.0.3"
-description = 'WaylanderDatabase'
-
-shadowJar {
-    relocate 'com.zaxxer', 'me.eduardwayland.mooncraft.waylander.libs.com.zaxxer'
-}
-
-def jarClassifier = (project.ext.classifier.isEmpty() ? "" : "-${project.ext.classifier}")
 
 publishing {
-    repositories {
-        maven {
-            name = "YotersRepo"
-            afterEvaluate {
-                def baseUrl = 'https://repo.yoters.com/repository/maven'
-                def releasesRepoUrl = "$baseUrl-releases"
-                def snapshotsRepoUrl = "$baseUrl-snapshots"
-                url = project.ext.isSnapshot || !project.ext.isMain ? snapshotsRepoUrl : releasesRepoUrl
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'me.eduardwayland.mooncraft.waylander'
+            artifactId = 'WaylanderDatabase'
+            version = '1.0.0'
 
-                credentials {
-                    username = props.get("myNexusUsername", project.properties.get("myNexusUsername") as String)
-                    password = props.get("myNexusPassword", project.properties.get("myNexusPassword") as String)
+            from components.java
+
+            pom {
+                name = 'WaylanderDatabase'
+                description = 'This library aims to avoid all the possible pitfalls with MySQL database handling even when dealing with simple and complex objects. The goal is reached by using asynchronous strategies.'
+                developers {
+                    developer {
+                        id = 'EduardWayland'
+                        name = 'Eduard Alexandru Popescu'
+                        email = 'eduardwayland@gmail.com'
+                    }
                 }
             }
         }
     }
-
-    publications {
-        create("${project.name}Maven", MavenPublication) { publication ->
-            from components.java
-            afterEvaluate {
-                publication.version("${project.version}$jarClassifier")
-            }
+    repositories {
+        maven {
+            url = "http://vps-2aa23b62.vps.ovh.us:8081/repository/mooncraft-releases/"
+            allowInsecureProtocol = true
+            credentials.username = props.get("nexus-username", properties.get("nexus-username") as String)
+            credentials.password = props.get("nexus-password", properties.get("nexus-password") as String)
         }
     }
 }
+
+group = "me.eduardwayland.mooncraft.waylander"
+description = 'WaylanderDatabase'

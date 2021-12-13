@@ -3,7 +3,9 @@ package me.eduardwayland.mooncraft.waylander.database.scheme;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+
 import me.eduardwayland.mooncraft.waylander.database.queries.Query;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
@@ -12,7 +14,7 @@ import java.util.LinkedList;
 @EqualsAndHashCode
 @AllArgsConstructor
 public abstract class DatabaseScheme {
-    
+
     /*
     Fields
      */
