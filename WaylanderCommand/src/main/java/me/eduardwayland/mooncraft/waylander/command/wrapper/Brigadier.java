@@ -112,6 +112,7 @@ public final class Brigadier {
         Bukkit.getPluginManager().registerEvents(new BrigadierListener(this), plugin);
     }
 
+
     /*
     Methods
      */
