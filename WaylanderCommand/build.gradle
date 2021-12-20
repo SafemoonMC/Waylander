@@ -9,7 +9,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId = 'me.eduardwayland.mooncraft.waylander'
             artifactId = 'WaylanderCommand'
-            version = '1.0.0'
+            version = '1.0.1'
 
             from components.java
 
@@ -28,8 +28,7 @@ publishing {
     }
     repositories {
         maven {
-            url = "http://vps-2aa23b62.vps.ovh.us:8081/repository/mooncraft-releases/"
-            allowInsecureProtocol = true
+            url = "https://nexus.mooncraft.dev/repository/mooncraft-releases/"
             credentials.username = props.get("nexus-username", properties.get("nexus-username") as String)
             credentials.password = props.get("nexus-password", properties.get("nexus-password") as String)
         }
