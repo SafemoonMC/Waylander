@@ -21,7 +21,7 @@ final class Reflections {
         Class<?> server = Bukkit.getServer().getClass();
         String version = server.getName().substring("org.bukkit.craftbukkit".length());
         SERVER_VERSION = version.substring(0, version.length() - "CraftServer".length());
-        NMS_CLASS = "net.minecraft.server" + SERVER_VERSION;
+        NMS_CLASS = "net.minecraft.";// + SERVER_VERSION;
         OBC_CLASS = "org.bukkit.craftbukkit" + SERVER_VERSION;
     }
 

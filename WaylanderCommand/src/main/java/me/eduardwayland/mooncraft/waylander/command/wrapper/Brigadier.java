@@ -34,9 +34,9 @@ public final class Brigadier {
      */
     static {
         final Class<?> craftServer = Reflections.getOBC("CraftServer");
-        final Class<?> minecraftServer = Reflections.getNMS("MinecraftServer");
-        final Class<?> commandDispatcher = Reflections.getNMS("CommandDispatcher");
-        final Class<?> commandListenerWrapper = Reflections.getNMS("CommandListenerWrapper");
+        final Class<?> minecraftServer = Reflections.getNMS("server.MinecraftServer");
+        final Class<?> commandDispatcher = Reflections.getNMS("commands.CommandDispatcher");
+        final Class<?> commandListenerWrapper = Reflections.getNMS("commands.CommandListenerWrapper");
         final Class<?> VANILLA_COMMAND_WRAPPER = Reflections.getOBC("command.VanillaCommandWrapper");
 
         try {
