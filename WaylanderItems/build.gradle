@@ -1,0 +1,37 @@
+dependencies {
+    compileOnly 'org.spigotmc:Airplane:1.17.1'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'me.eduardwayland.mooncraft.waylander'
+            artifactId = 'WaylanderItems'
+            version = '1.0.0'
+
+            from components.java
+
+            pom {
+                name = 'WaylanderItems'
+                description = 'This Waylander module aims to ease up Bukkit ItemStack creation and handling.'
+                developers {
+                    developer {
+                        id = 'EduardWayland'
+                        name = 'Eduard Alexandru Popescu'
+                        email = 'eduardwayland@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "https://nexus.mooncraft.dev/repository/mooncraft-releases/"
+            credentials.username = props.get("nexus-username", properties.get("nexus-username") as String)
+            credentials.password = props.get("nexus-password", properties.get("nexus-password") as String)
+        }
+    }
+}
+
+group = "me.eduardwayland.mooncraft.waylander"
+description = 'This Waylander module aims to ease up Bukkit ItemStack creation and handling.'
