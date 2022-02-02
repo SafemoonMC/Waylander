@@ -1,25 +1,39 @@
 package me.eduardwayland.mooncraft.waylander.scheduler;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 public interface Scheduler {
 
-    Executor sync();
+    @NotNull Executor sync();
 
-    Executor async();
+    @NotNull Executor async();
 
-    default void executeAsync(Runnable runnable) {
+    default void executeAsync(@NotNull Runnable runnable) {
         async().execute(runnable);
     }
 
-    default void executeSync(Runnable runnable) {
+    default void executeSync(@NotNull Runnable runnable) {
         sync().execute(runnable);
     }
 
-    SchedulerTask asyncLater(Runnable runnable, long delay, TimeUnit timeUnit);
+    @NotNull SchedulerTask syncLater(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit);
 
-    SchedulerTask asyncRepeating(Runnable runnable, long interval, TimeUnit timeUnit);
+    default @NotNull SchedulerTask syncRepeating(@NotNull Runnable runnable, long interval, @NotNull TimeUnit timeUnit) {
+        return syncRepeating(runnable, 0, interval, timeUnit);
+    }
+
+    @NotNull SchedulerTask syncRepeating(@NotNull Runnable runnable, long delay, long interval, @NotNull TimeUnit timeUnit);
+
+    @NotNull SchedulerTask asyncLater(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit);
+
+    default @NotNull SchedulerTask asyncRepeating(@NotNull Runnable runnable, long interval, @NotNull TimeUnit timeUnit) {
+        return asyncRepeating(runnable, 0, interval, timeUnit);
+    }
+
+    @NotNull SchedulerTask asyncRepeating(@NotNull Runnable runnable, long delay, long interval, @NotNull TimeUnit timeUnit);
 
     void shutdownExecutor();
 

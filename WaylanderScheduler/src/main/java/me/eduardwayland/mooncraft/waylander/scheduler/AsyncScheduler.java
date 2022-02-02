@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,19 +47,19 @@ public abstract class AsyncScheduler implements Scheduler {
     }
 
     @Override
-    public Executor async() {
+    public @NotNull Executor async() {
         return forkJoinPool;
     }
 
     @Override
-    public SchedulerTask asyncLater(Runnable runnable, long delay, TimeUnit timeUnit) {
+    public @NotNull SchedulerTask asyncLater(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit) {
         ScheduledFuture<?> future = this.scheduledThreadPoolExecutor.schedule(() -> this.errorReportingExecutor.execute(runnable), delay, timeUnit);
         return () -> future.cancel(false);
     }
 
     @Override
-    public SchedulerTask asyncRepeating(Runnable runnable, long interval, TimeUnit timeUnit) {
-        ScheduledFuture<?> future = this.scheduledThreadPoolExecutor.scheduleAtFixedRate(() -> this.errorReportingExecutor.execute(runnable), 0, interval, timeUnit);
+    public @NotNull SchedulerTask asyncRepeating(@NotNull Runnable runnable, long delay, long interval, @NotNull TimeUnit timeUnit) {
+        ScheduledFuture<?> future = this.scheduledThreadPoolExecutor.scheduleAtFixedRate(() -> this.errorReportingExecutor.execute(runnable), delay, interval, timeUnit);
         return () -> future.cancel(false);
     }
 
