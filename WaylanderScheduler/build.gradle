@@ -3,7 +3,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId = 'me.eduardwayland.mooncraft.waylander'
             artifactId = 'WaylanderScheduler'
-            version = '1.0.0'
+            version = '1.0.1'
 
             from components.java
 
