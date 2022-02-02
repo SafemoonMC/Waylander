@@ -19,13 +19,13 @@ public interface Scheduler {
         sync().execute(runnable);
     }
 
-    @NotNull SchedulerTask syncLater(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit);
+    @NotNull SchedulerTask syncLater(@NotNull Runnable runnable, long delay);
 
-    default @NotNull SchedulerTask syncRepeating(@NotNull Runnable runnable, long interval, @NotNull TimeUnit timeUnit) {
-        return syncRepeating(runnable, 0, interval, timeUnit);
+    default @NotNull SchedulerTask syncRepeating(@NotNull Runnable runnable, long interval) {
+        return syncRepeating(runnable, 0, interval);
     }
 
-    @NotNull SchedulerTask syncRepeating(@NotNull Runnable runnable, long delay, long interval, @NotNull TimeUnit timeUnit);
+    @NotNull SchedulerTask syncRepeating(@NotNull Runnable runnable, long delay, long interval);
 
     @NotNull SchedulerTask asyncLater(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit);
 
