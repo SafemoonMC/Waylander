@@ -6,11 +6,10 @@ import lombok.NoArgsConstructor;
 import me.eduardwayland.mooncraft.waylander.items.ItemBuilder;
 import me.eduardwayland.mooncraft.waylander.items.meta.MetaBuilderHead;
 
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,9 +36,9 @@ public final class ItemParser {
             throw new IllegalArgumentException("No ItemBuilder can be created from that configuration section.");
         }
 
-        String display = color(configurationSection.getString("display"));
-        String description = color(configurationSection.getString("description"));
-        List<String> lore = configurationSection.getStringList("lore").stream().map(ItemParser::color).toList();
+        String display = configurationSection.getString("display");
+        String description = configurationSection.getString("description");
+        List<String> lore = configurationSection.getStringList("lore");
 
         return itemBuilder.meta().consume(metaBuilder -> {
             if (display != null) {
@@ -47,13 +46,9 @@ public final class ItemParser {
             }
             if (description != null) {
                 metaBuilder.lore(description);
+                Bukkit.getLogger().info("Added description: " + description);
             }
             metaBuilder.lore(lore, true);
         }).item();
-    }
-
-    private static @Nullable String color(@Nullable String text) {
-        if (text == null) return null;
-        return ChatColor.translateAlternateColorCodes('&', text);
     }
 }
