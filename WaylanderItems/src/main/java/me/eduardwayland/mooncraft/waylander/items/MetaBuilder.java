@@ -24,14 +24,14 @@ public class MetaBuilder<T extends ItemMeta> {
     /*
     Constants
      */
-    public static final int PAGINATION_SIZE = 40;
+    public static final int PAGINATION_SIZE = 35;
 
     /*
     Fields
      */
     final @NotNull ItemBuilder itemBuilder;
     @Getter(value = AccessLevel.PROTECTED)
-    final @NotNull T itemMeta;
+    private final @NotNull T itemMeta;
 
     @Nullable Function<String, String> placeholderFunction;
 
@@ -41,7 +41,7 @@ public class MetaBuilder<T extends ItemMeta> {
     @SuppressWarnings("unchecked")
     protected MetaBuilder(@NotNull ItemBuilder itemBuilder) {
         this.itemBuilder = itemBuilder;
-        this.itemMeta = (T) this.itemBuilder.itemStack.getItemMeta();
+        this.itemMeta = (T) this.itemBuilder.getItemStack().getItemMeta();
     }
 
     /*
@@ -113,7 +113,7 @@ public class MetaBuilder<T extends ItemMeta> {
             getItemMeta().lore(lore.stream().map(line -> placeholderFunction != null ? ChatColor.translateAlternateColorCodes('&', placeholderFunction.apply(line)) : line).map(line -> (Component) Component.text(line)).toList());
         }
 
-        this.itemBuilder.itemStack.setItemMeta(getItemMeta());
+        this.itemBuilder.getItemStack().setItemMeta(getItemMeta());
         return this.itemBuilder;
     }
 }

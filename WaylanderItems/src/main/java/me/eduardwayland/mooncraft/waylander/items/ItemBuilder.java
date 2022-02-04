@@ -3,12 +3,13 @@ package me.eduardwayland.mooncraft.waylander.items;
 import lombok.AccessLevel;
 import lombok.Getter;
 
+import me.eduardwayland.mooncraft.waylander.items.records.ItemEnchant;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -18,7 +19,7 @@ public class ItemBuilder {
     Fields
      */
     @Getter(value = AccessLevel.PACKAGE)
-    final @NotNull ItemStack itemStack;
+    private final @NotNull ItemStack itemStack;
 
     /*
     Constructors
@@ -83,6 +84,10 @@ public class ItemBuilder {
         } catch (Exception e) {
             throw new IllegalArgumentException("That MetaBuilder doesn't have the required constructor!", e);
         }
+    }
+
+    public @NotNull DataBuilder<?, ?> data() {
+        return new DataBuilder<>(this);
     }
 
     public @NotNull ItemStack stack() {

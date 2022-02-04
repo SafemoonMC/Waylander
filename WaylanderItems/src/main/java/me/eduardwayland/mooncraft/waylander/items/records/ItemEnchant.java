@@ -1,4 +1,4 @@
-package me.eduardwayland.mooncraft.waylander.items;
+package me.eduardwayland.mooncraft.waylander.items.records;
 
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
