@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
 import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.ChatPaginator;
 import org.jetbrains.annotations.NotNull;
@@ -76,7 +77,7 @@ public class MetaBuilder<T extends ItemMeta> {
         return this;
     }
 
-    public @NotNull MetaBuilder<T> placeholder(@NotNull Function<String, String> placeholderFunction) {
+    public @NotNull MetaBuilder<T> placeholders(@NotNull Function<String, String> placeholderFunction) {
         this.placeholderFunction = placeholderFunction;
         return this;
     }
@@ -84,6 +85,12 @@ public class MetaBuilder<T extends ItemMeta> {
     public @NotNull MetaBuilder<T> model(int model) {
         Objects.requireNonNull(this.itemMeta, "This builder doesn't contain a meta.");
         this.itemMeta.setCustomModelData(model);
+        return this;
+    }
+
+    public @NotNull MetaBuilder<T> flags(@NotNull ItemFlag... flags) {
+        Objects.requireNonNull(this.itemMeta, "This builder doesn't contain an item.");
+        this.itemMeta.addItemFlags(flags);
         return this;
     }
 
