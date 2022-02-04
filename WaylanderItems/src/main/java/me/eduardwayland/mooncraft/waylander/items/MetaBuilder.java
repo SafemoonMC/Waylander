@@ -25,7 +25,7 @@ public class MetaBuilder<T extends ItemMeta> {
     /*
     Constants
      */
-    public static final int PAGINATION_SIZE = 35;
+    public static final int PAGINATION_SIZE = 30;
 
     /*
     Fields
@@ -101,23 +101,22 @@ public class MetaBuilder<T extends ItemMeta> {
     }
 
     public @NotNull ItemBuilder item() {
-        if (placeholderFunction != null) {
-            if (getItemMeta().displayName() != null) {
-                String display = ((TextComponent) getItemMeta().displayName()).content();
-                display(ChatColor.translateAlternateColorCodes('&', placeholderFunction.apply(display)));
-            }
+        if (getItemMeta().displayName() != null) {
+            String display = ((TextComponent) getItemMeta().displayName()).content();
+            display(placeholderFunction == null ? display : placeholderFunction.apply(display));
         }
         if (getItemMeta().lore() != null) {
             List<String> lore = new ArrayList<>();
             for (Component component : getItemMeta().lore()) {
                 TextComponent textComponent = (TextComponent) component;
-                if (textComponent.content().contains("\n")) {
-                    lore.addAll(Arrays.asList(textComponent.content().split("\n")));
+                String content = placeholderFunction == null ? textComponent.content() : placeholderFunction.apply(textComponent.content());
+                if (content.contains("\n")) {
+                    lore.addAll(Arrays.asList(content.split("\\n")));
                 } else {
-                    lore.add(textComponent.content());
+                    lore.add(content);
                 }
             }
-            getItemMeta().lore(lore.stream().map(line -> placeholderFunction != null ? ChatColor.translateAlternateColorCodes('&', placeholderFunction.apply(line)) : line).map(line -> (Component) Component.text(line)).toList());
+            lore(lore);
         }
 
         this.itemBuilder.getItemStack().setItemMeta(getItemMeta());
