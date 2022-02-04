@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import me.eduardwayland.mooncraft.waylander.items.ItemBuilder;
 import me.eduardwayland.mooncraft.waylander.items.meta.MetaBuilderHead;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +45,6 @@ public final class ItemParser {
             }
             if (description != null) {
                 metaBuilder.lore(description);
-                Bukkit.getLogger().info("Added description: " + description);
             }
             metaBuilder.lore(lore, true);
         }).item();
