@@ -62,7 +62,7 @@ public class DataBuilder<Q, T extends PersistentItemData<Q>> {
         return this;
     }
 
-    public @NotNull ItemBuilder item() throws Exception {
+    public @NotNull ItemBuilder item() {
         try {
             init();
         } catch (Exception ignored) {
