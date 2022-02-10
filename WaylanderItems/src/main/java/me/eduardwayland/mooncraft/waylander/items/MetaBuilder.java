@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class MetaBuilder<T extends ItemMeta> {
+public class MetaBuilder<S extends MetaBuilder<S, T>, T extends ItemMeta> {
 
     /*
     Constants
@@ -48,56 +48,56 @@ public class MetaBuilder<T extends ItemMeta> {
     /*
     Methods
      */
-    public @NotNull MetaBuilder<T> display(@NotNull String display) {
+    public @NotNull S display(@NotNull String display) {
         Objects.requireNonNull(this.itemMeta, "This builder doesn't contain a meta.");
         this.itemMeta.displayName(Component.text(ChatColor.translateAlternateColorCodes('&', display)));
-        return this;
+        return (S) this;
     }
 
-    public @NotNull MetaBuilder<T> lore(@NotNull String description) {
+    public @NotNull S lore(@NotNull String description) {
         Objects.requireNonNull(this.itemMeta, "This builder doesn't contain a meta.");
         return lore(description, PAGINATION_SIZE);
     }
 
-    public @NotNull MetaBuilder<T> lore(@NotNull String description, int paginationSize) {
+    public @NotNull S lore(@NotNull String description, int paginationSize) {
         Objects.requireNonNull(this.itemMeta, "This builder doesn't contain a meta.");
         return lore(Arrays.asList(ChatPaginator.wordWrap(ChatColor.translateAlternateColorCodes('&', description), paginationSize)));
     }
 
-    public @NotNull MetaBuilder<T> lore(@NotNull List<String> loreList) {
+    public @NotNull S lore(@NotNull List<String> loreList) {
         Objects.requireNonNull(this.itemMeta, "This builder doesn't contain a meta.");
         return lore(loreList, false);
     }
 
-    public @NotNull MetaBuilder<T> lore(@NotNull List<String> loreList, boolean append) {
+    public @NotNull S lore(@NotNull List<String> loreList, boolean append) {
         Objects.requireNonNull(this.itemMeta, "This builder doesn't contain a meta.");
         List<Component> list = append && itemMeta.lore() != null ? new ArrayList<>(itemMeta.lore()) : new ArrayList<>();
         list.addAll(loreList.stream().map(line -> ChatColor.translateAlternateColorCodes('&', line)).map(Component::text).map(textComponent -> (Component) textComponent).toList());
         this.itemMeta.lore(list);
-        return this;
+        return (S) this;
     }
 
-    public @NotNull MetaBuilder<T> placeholders(@NotNull Function<String, String> placeholderFunction) {
+    public @NotNull S placeholders(@NotNull Function<String, String> placeholderFunction) {
         this.placeholderFunction = placeholderFunction;
-        return this;
+        return (S) this;
     }
 
-    public @NotNull MetaBuilder<T> model(int model) {
+    public @NotNull S model(int model) {
         Objects.requireNonNull(this.itemMeta, "This builder doesn't contain a meta.");
         this.itemMeta.setCustomModelData(model);
-        return this;
+        return (S) this;
     }
 
-    public @NotNull MetaBuilder<T> flags(@NotNull ItemFlag... flags) {
+    public @NotNull S flags(@NotNull ItemFlag... flags) {
         Objects.requireNonNull(this.itemMeta, "This builder doesn't contain an item.");
         this.itemMeta.addItemFlags(flags);
-        return this;
+        return (S) this;
     }
 
-    public @NotNull MetaBuilder<T> consume(@NotNull Consumer<MetaBuilder<T>> metaBuilderConsumer) {
+    public @NotNull S consume(@NotNull Consumer<S> metaBuilderConsumer) {
         Objects.requireNonNull(this.itemMeta, "This builder doesn't contain a meta.");
-        metaBuilderConsumer.accept(this);
-        return this;
+        metaBuilderConsumer.accept((S) this);
+        return (S) this;
     }
 
     public @NotNull ItemBuilder item() {

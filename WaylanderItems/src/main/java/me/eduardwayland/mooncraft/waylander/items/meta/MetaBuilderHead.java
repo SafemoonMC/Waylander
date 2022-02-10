@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.Base64;
 import java.util.Objects;
 
-public class MetaBuilderHead extends MetaBuilder<SkullMeta> {
+public class MetaBuilderHead extends MetaBuilder<MetaBuilderHead,SkullMeta> {
 
     /*
     Static

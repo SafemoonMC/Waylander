@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class MetaBuilderPotion extends MetaBuilder<PotionMeta> {
+public class MetaBuilderPotion extends MetaBuilder<MetaBuilderPotion,PotionMeta> {
 
     /*
     Constructors

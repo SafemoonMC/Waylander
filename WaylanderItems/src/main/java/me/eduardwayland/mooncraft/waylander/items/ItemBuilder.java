@@ -74,11 +74,11 @@ public class ItemBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    public @NotNull MetaBuilder<ItemMeta> meta() {
+    public @NotNull MetaBuilder<?, ItemMeta> meta() {
         return meta(MetaBuilder.class);
     }
 
-    public @NotNull <T extends MetaBuilder<? extends ItemMeta>> T meta(@NotNull Class<T> metaBuilderClass) {
+    public @NotNull <T extends MetaBuilder<T, ? extends ItemMeta>> T meta(@NotNull Class<T> metaBuilderClass) {
         try {
             return metaBuilderClass.getDeclaredConstructor(ItemBuilder.class).newInstance(this);
         } catch (Exception e) {

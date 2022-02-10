@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class MetaBuilderArmor extends MetaBuilder<LeatherArmorMeta> {
+public class MetaBuilderArmor extends MetaBuilder<MetaBuilderArmor,LeatherArmorMeta> {
 
     /*
     Constructors
