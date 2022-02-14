@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import me.eduardwayland.mooncraft.waylander.database.messenger.consumer.IncomingMessageConsumer;
-import me.eduardwayland.mooncraft.waylander.database.messenger.message.OutgoingMessage;
 import me.eduardwayland.mooncraft.waylander.database.messenger.utilities.GsonProvider;
 import me.eduardwayland.mooncraft.waylander.database.messenger.utilities.JsonObjectWrapper;
 import me.eduardwayland.mooncraft.waylander.scheduler.AsyncScheduler;
@@ -37,7 +36,7 @@ public final class RedisMessenger implements Messenger {
     @Getter(value = AccessLevel.PACKAGE)
     private final @Nullable IncomingMessageConsumer consumer;
 
-    @Getter(value = AccessLevel.PACKAGE)
+    @Getter
     private @Nullable String incomingChannel;
 
 
@@ -60,11 +59,13 @@ public final class RedisMessenger implements Messenger {
     /*
     Methods
      */
-    public void init(@NotNull String incomingChannel, @NotNull JedisPoolConfig jedisPoolConfig, @NotNull HostAndPort hostAndPort, @NotNull String username, @NotNull String password) {
+    public void init(@Nullable String incomingChannel, @NotNull JedisPoolConfig jedisPoolConfig, @NotNull HostAndPort hostAndPort, @NotNull String username, @NotNull String password) {
         this.incomingChannel = incomingChannel;
         this.jedisPool = new JedisPool(jedisPoolConfig, hostAndPort.getHost(), hostAndPort.getPort(), username, password);
-        this.subscription = new RedisSubscription(this);
-        this.scheduler.executeAsync(this.subscription);
+        if (this.incomingChannel != null) {
+            this.subscription = new RedisSubscription(this);
+            this.scheduler.executeAsync(this.subscription);
+        }
     }
 
     public void stop() {
@@ -80,11 +81,11 @@ public final class RedisMessenger implements Messenger {
     Override Methods
      */
     @Override
-    public @NotNull CompletableFuture<Boolean> sendMessage(@NotNull String redisChannel, @NotNull OutgoingMessage outgoingMessage) {
+    public @NotNull CompletableFuture<Boolean> sendMessage(@NotNull String redisChannel, @NotNull String jsonOutgoingMessage) {
         if (isClosed()) return CompletableFuture.completedFuture(false);
         return CompletableFuture.supplyAsync(() -> {
             try (Jedis jedis = jedisPool.getResource()) {
-                jedis.publish(redisChannel, outgoingMessage.asJsonString());
+                jedis.publish(redisChannel, jsonOutgoingMessage);
                 return true;
             } catch (Exception e) {
                 System.out.printf("[%s] [Redis Pub/Sub] Error sendMessage: %s", identifier, e.getMessage());

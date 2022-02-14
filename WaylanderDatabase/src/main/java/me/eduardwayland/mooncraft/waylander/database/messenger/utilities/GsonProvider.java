@@ -14,8 +14,8 @@ public final class GsonProvider {
     /*
     Constants
      */
-    private static final @NotNull Gson NORMAL = new GsonBuilder().disableHtmlEscaping().create();
-    private static final @NotNull Gson PRETTY_PRINTING = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+    private static final @NotNull Gson NORMAL = new GsonBuilder().generateNonExecutableJson().disableHtmlEscaping().create();
+    private static final @NotNull Gson PRETTY_PRINTING = new GsonBuilder().generateNonExecutableJson().disableHtmlEscaping().setPrettyPrinting().create();
 
     /*
     Static Methods

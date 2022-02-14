@@ -19,7 +19,18 @@ public interface Messenger {
      * @param outgoingMessage the message to send
      * @return a {@link CompletableFuture<Boolean>}
      */
-    @NotNull CompletableFuture<Boolean> sendMessage(@NotNull String redisChannel, @NotNull OutgoingMessage outgoingMessage);
+    default @NotNull CompletableFuture<Boolean> sendMessage(@NotNull String redisChannel, @NotNull OutgoingMessage outgoingMessage) {
+        return sendMessage(redisChannel, outgoingMessage.asJsonString());
+    }
+
+    /**
+     * Sends the message asynchronously using {@link CompletableFuture}
+     *
+     * @param redisChannel        the channel to send message to
+     * @param jsonOutgoingMessage the message to send in json format
+     * @return a {@link CompletableFuture<Boolean>}
+     */
+    @NotNull CompletableFuture<Boolean> sendMessage(@NotNull String redisChannel, @NotNull String jsonOutgoingMessage);
 
     /**
      * Associates the value with the key in the Redis memory
