@@ -1,6 +1,5 @@
 package me.eduardwayland.mooncraft.waylander.items;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 
 import me.eduardwayland.mooncraft.waylander.items.records.ItemEnchant;
@@ -18,7 +17,7 @@ public class ItemBuilder {
     /*
     Fields
      */
-    @Getter(value = AccessLevel.PACKAGE)
+    @Getter
     private final @NotNull ItemStack itemStack;
 
     /*

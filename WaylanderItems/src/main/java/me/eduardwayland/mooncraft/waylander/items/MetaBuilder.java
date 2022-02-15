@@ -1,6 +1,5 @@
 package me.eduardwayland.mooncraft.waylander.items;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 
 import net.kyori.adventure.text.Component;
@@ -31,7 +30,7 @@ public class MetaBuilder<S extends MetaBuilder<S, T>, T extends ItemMeta> {
     Fields
      */
     final @NotNull ItemBuilder itemBuilder;
-    @Getter(value = AccessLevel.PROTECTED)
+    @Getter
     private final @NotNull T itemMeta;
 
     @Nullable Function<String, String> placeholderFunction;
