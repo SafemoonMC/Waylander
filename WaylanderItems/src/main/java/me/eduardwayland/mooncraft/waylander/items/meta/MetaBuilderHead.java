@@ -1,36 +1,20 @@
 package me.eduardwayland.mooncraft.waylander.items.meta;
 
-import com.mojang.authlib.GameProfile;
-
 import me.eduardwayland.mooncraft.waylander.items.ItemBuilder;
 import me.eduardwayland.mooncraft.waylander.items.MetaBuilder;
-import me.eduardwayland.mooncraft.waylander.items.utility.GameProfiles;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Base64;
 import java.util.Objects;
+import java.util.UUID;
 
-public class MetaBuilderHead extends MetaBuilder<MetaBuilderHead,SkullMeta> {
-
-    /*
-    Static
-     */
-    private static final Method META_SET_PROFILE_METHOD;
-
-    static {
-        try {
-            META_SET_PROFILE_METHOD = SkullMeta.class.getDeclaredMethod("setProfile", GameProfile.class);
-            META_SET_PROFILE_METHOD.setAccessible(true);
-        } catch (Exception e) {
-            throw new IllegalStateException("No reflection can be applied for the current MetaBuilder.");
-        }
-    }
+public class MetaBuilderHead extends MetaBuilder<MetaBuilderHead, SkullMeta> {
 
     /*
     Constructors
@@ -50,10 +34,13 @@ public class MetaBuilderHead extends MetaBuilder<MetaBuilderHead,SkullMeta> {
 
     public @NotNull MetaBuilderHead textureHash(@NotNull String textureHash) {
         Objects.requireNonNull(getItemMeta(), "This builder doesn't contain a meta.");
+
+        UUID hashAsId = new UUID(textureHash.hashCode(), textureHash.hashCode());
         try {
-            META_SET_PROFILE_METHOD.invoke(getItemMeta(), GameProfiles.makeProfile(textureHash));
+            ItemStack newItemStack = Bukkit.getUnsafe().modifyItemStack(this.item().getItemStack(), "{SkullOwner:{Id:\"" + hashAsId + "\",Properties:{textures:[{Value:\"" + textureHash + "\"}]}}}");
+            setItemMeta((SkullMeta) newItemStack.getItemMeta());
             return this;
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (Exception e) {
             throw new IllegalStateException("No reflection can be applied for the current MetaBuilder.");
         }
     }
