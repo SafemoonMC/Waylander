@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Constructor;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -79,7 +80,11 @@ public class ItemBuilder {
 
     public @NotNull <T extends MetaBuilder<T, ? extends ItemMeta>> T meta(@NotNull Class<T> metaBuilderClass) {
         try {
-            return metaBuilderClass.getDeclaredConstructor(ItemBuilder.class).newInstance(this);
+            Constructor<?> constructor = metaBuilderClass.getDeclaredConstructor(ItemBuilder.class);
+            constructor.setAccessible(true);
+            T object = (T) constructor.newInstance(this);
+            constructor.setAccessible(false);
+            return object;
         } catch (Exception e) {
             throw new IllegalArgumentException("That MetaBuilder doesn't have the required constructor!", e);
         }
