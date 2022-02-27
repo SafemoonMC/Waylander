@@ -146,7 +146,7 @@ public abstract class Command {
     }
 
     @SuppressWarnings("unchecked")
-    protected <S extends CommandSender> int wrapLiteralExecute(@NotNull LiteralCommand<S> literalCommand, @NotNull CommandContext<Object> commandContext) {
+    protected <S extends CommandSender> int wrapLiteralExecute(@NotNull LiteralCommand<S> literalCommand, @NotNull CommandContext<Object> commandContext) throws CommandSyntaxException {
         CommandSender commandSender = Brigadier.getBukkitSender(commandContext.getSource());
         if (literalCommand.getExecutor() == null) return 0;
         if (!literalCommand.hasPermission(commandSender)) {
